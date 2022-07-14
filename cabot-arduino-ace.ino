@@ -24,22 +24,29 @@
 #undef ESP32
 #include <ros.h>
 #define ESP32
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 2
+#endif
 #else
 #include <ros.h>
 #endif
 
 #include "Arduino.h"
-#include <Timer.h>
+#include <arduino-timer.h>
 
+#include "uart_com.h"
 #include "BarometerReader.h"
-#include "ButtonsReader.h"
+//#include "ButtonsReader.h"
+#include "ButtonsReader_ace.h"
 #include "Heartbeat.h"
 #include "IMUReader.h"
-#include "TouchReader.h"
-#include "VibratorController.h"
+//#include "TouchReader.h"
+#include "TouchReader_ace.h"
+//#include "VibratorController.h"
+#include "VibratorController_ace.h"
 
 ros::NodeHandle nh;
-Timer timer;
+Timer<10> timer;
 
 // configurations
 #define BAUDRATE (115200)
@@ -75,14 +82,19 @@ Timer timer;
 #define TOUCH_THRESHOLD_DEFAULT (64)
 #define RELEASE_THRESHOLD_DEFAULT (24)
 
+uart_com urt_cm(nh);
+
 // sensors
 BarometerReader bmpReader(nh);
-ButtonsReader buttonsReader(nh, BTN1_PIN, BTN2_PIN, BTN3_PIN, BTN4_PIN);
+//ButtonsReader buttonsReader(nh, BTN1_PIN, BTN2_PIN, BTN3_PIN, BTN4_PIN);
+ButtonsReader_ace buttonsReader(nh, urt_cm);
 IMUReader imuReader(nh);
-TouchReader touchReader(nh);
+//TouchReader touchReader(nh);
+TouchReader_ace touchReader(nh, urt_cm);
 
 // controllers
-VibratorController vibratorController(nh, VIB1_PIN, VIB2_PIN, VIB3_PIN, VIB4_PIN);
+//VibratorController vibratorController(nh, VIB1_PIN, VIB2_PIN, VIB3_PIN, VIB4_PIN);
+VibratorController_ace vibratorController(nh, urt_cm);
 Heartbeat heartbeat(LED_BUILTIN, HEARTBEAT_DELAY);
 
 
@@ -90,33 +102,43 @@ void setup()
 {
   // set baud rate
   nh.getHardware()->setBaud(BAUDRATE);
+  urt_cm.begin(19200);
 
   // connect to rosserial
   nh.initNode();
   while(!nh.connected()) {nh.spinOnce();}
   nh.loginfo("Connected");
 
-  int calibration_params[22];
-  if (!nh.getParam("~calibration_params", calibration_params, 22, 500)) {
-    nh.logerror("clibration_params is needed to use correctly.");
-    nh.logerror("You can check calibration value with /calibration topic.");
-    nh.logerror("First 22 byte is calibration data, following 4 byte is calibration status for");
-    nh.logerror("System, Gyro, Accel, Magnet, 0 (not configured) <-> 3 (configured)");
-    nh.logerror("Specify like calibration_params:=[0, 0, 0, 0 ...]");
-    nh.logerror("Visit the following link to check how to calibrate sensoe");
-    nh.logerror("https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/device-calibration");
+  int run_imu_calibration = 0;
+  nh.getParam("~run_imu_calibration", &run_imu_calibration, 1, 500);
+  if (run_imu_calibration != 0) {
     imuReader.calibration();
-    timer.every(100, [](){
+    timer.every(100, [](void*){
       imuReader.update();
+      imuReader.update_calibration();
+      return true;
     });
     nh.loginfo("Calibration Mode started");
     return;
   }
-  uint8_t offsets[22];
-  for(int i = 0; i < 22; i++) {
-    offsets[i] = calibration_params[i] & 0xFF;
-  }
 
+  int calibration_params[22];
+  uint8_t *offsets = NULL;
+  if (nh.getParam("~calibration_params", calibration_params, 22, 500)) {
+    offsets = (uint8_t*) malloc(sizeof(uint8_t) * 22);
+    for(int i = 0; i < 22; i++) {
+      offsets[i] = calibration_params[i] & 0xFF;
+    }
+  } else {
+    nh.logwarn("clibration_params is needed to use IMU (BNO055) correctly.");
+    nh.logwarn("You can run calibration by setting _run_imu_calibration:=1");
+    nh.logwarn("You can check calibration value with /calibration topic.");
+    nh.logwarn("First 22 byte is calibration data, following 4 byte is calibration status for");
+    nh.logwarn("System, Gyro, Accel, Magnet, 0 (not configured) <-> 3 (configured)");
+    nh.logwarn("Specify like calibration_params:=[0, 0, 0, 0 ...]");
+    nh.logwarn("Visit the following link to check how to calibrate sensoe");
+    nh.logwarn("https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/device-calibration");
+  }
 
   int touch_params[3];
   int touch_baseline;
@@ -148,6 +170,8 @@ void setup()
   nh.loginfo(default_values);
 
   // initialize
+  nh.loginfo("starting uart com");
+  urt_cm.start();
   nh.loginfo("setting up BMP280");
   bmpReader.init();
   nh.loginfo("setting up Buttons");
@@ -160,23 +184,28 @@ void setup()
   vibratorController.init();
   nh.loginfo("setting up heartbeat");
   heartbeat.init();
+
   
   // wait sensors ready
   delay(100);
 
   // set timers
-  timer.every(500, [](){
+  timer.every(500, [](void*){
       bmpReader.update();
+      urt_cm.publish();
+      return true;
     });
 
-  timer.every(20, [](){
-      heartbeat.update();
+  timer.every(20, [](void*){
+      //heartbeat.update();
       buttonsReader.update();
       touchReader.update();
+      return true;
     });
 
-  timer.every(10, [](){
+  timer.every(10, [](void*){
       imuReader.update();
+      return true;
     });
   
   nh.loginfo("Arduino is ready");
@@ -184,6 +213,7 @@ void setup()
 
 void loop()
 {
-  timer.update();
+  timer.tick<void>();
+  urt_cm.update();
   nh.spinOnce();
 }

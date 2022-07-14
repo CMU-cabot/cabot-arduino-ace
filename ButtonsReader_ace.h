@@ -1,7 +1,5 @@
-#include <analogWrite.h>
-
 /*******************************************************************************
- * Copyright (c) 2020  Carnegie Mellon University
+ * Copyright (c) 2020, 2022 Carnegie Mellon University, IBM Corporation, and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +20,30 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_HEARTBEAT_H
-#define ARDUINO_NODE_HEARTBEAT_H
+#ifndef ARDUINO_NODE_BUTTONS_READER_ACE_H
+#define ARDUINO_NODE_BUTTONS_READER_ACE_H
 
-#include <Arduino.h>
-#ifdef ESP32
-#include <analogWrite.h>
-#endif
+#include <Wire.h>
+#include <std_msgs/Bool.h>
+#include "SensorReader.h"
+#include "uart_com.h"
 
-class Heartbeat {
-  int led_pin_;
-  int delay_;
-  int status_;
+class ButtonsReader_ace: public SensorReader {
+  ros::Publisher b1_pub_;
+  ros::Publisher b2_pub_;
+  ros::Publisher b3_pub_;
+  ros::Publisher b4_pub_;
+  ros::Publisher b5_pub_;
+  std_msgs::Bool b1_msg_;
+  std_msgs::Bool b2_msg_;
+  std_msgs::Bool b3_msg_;
+  std_msgs::Bool b4_msg_;
+  std_msgs::Bool b5_msg_;
+  uart_com& cm;
 public:
-Heartbeat(int led_pin, int delay):
-  led_pin_(led_pin),
-  delay_(delay),
-  status_(0)
-  {
-  }
-
-  void init() {
-    pinMode(led_pin_, OUTPUT);
-    analogWrite(led_pin_, 0xff);
-  }
-
-  void update() {
-    status_ = status_+1;
-    analogWrite(led_pin_, (int)(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
-  }
+  ButtonsReader_ace(ros::NodeHandle &nh, uart_com& cm);
+  void init();
+  void update();
 };
 
-#endif // ARDUINO_NODE_HEARTBEAT_H
+#endif //ARDUINO_NODE_BUTTONS_READER_ACE_H
