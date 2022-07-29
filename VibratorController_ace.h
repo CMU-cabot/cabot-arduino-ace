@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020  Carnegie Mellon University
+ * Copyright (c) 2020, 2022 Carnegie Mellon University, IBM Corporation, and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,32 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_TOUCH_READER_H
-#define ARDUINO_NODE_TOUCH_READER_H
+#ifndef ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
+#define ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
 
 #include <Wire.h>
-#include <Adafruit_MPR121.h>
-#include <std_msgs/Int16.h>
-#include <std_msgs/Float32.h>
+#include <std_msgs/UInt8.h>
 #include "SensorReader.h"
+#ifdef ESP32
+#include <analogWrite.h>
+#endif
+#include "uart_com.h"
 
-class TouchReader: public SensorReader {
-  Adafruit_MPR121 cap_;
-  int16_t touched_;
-  ros::Publisher touch_pub_;
-  ros::Publisher raw_pub_;
-  ros::Publisher vel_pub_;
-  std_msgs::Int16 touch_msg_; //each of 12 channels are represented as 1 bit in message
-  std_msgs::Int16 raw_msg_;
-  std_msgs::Float32 vel_msg_;
+//#define VIB1_PIN (19)  //front
+//#define VIB2_PIN (20)   //back //not using
+//#define VIB3_PIN (18)  //left
+//#define VIB4_PIN (17)   //right
 
+class VibratorController_ace: public SensorReader {
+  ros::Subscriber<std_msgs::UInt8> vib1_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib2_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib3_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib4_sub_;
+  uart_com& cm;
 public:
-  TouchReader(ros::NodeHandle &nh);
+  VibratorController_ace(ros::NodeHandle &nh, uart_com& cm);
   void init();
-  void init(uint8_t touch_baseline, uint8_t touch_threshold, uint8_t release_threshold);
   void update();
-private:
-  void set_mode(uint8_t touch_baseline);
 };
 
-#endif //ARDUINO_NODE_TOUCH_READER_H
+#endif //ARDUINO_NODE_VIBRATOR_CONTROLLER_H
