@@ -151,7 +151,8 @@ void WiFiReader::handleScan()
           String name = WiFi.SSID(i);
           name.replace(",", " ");
           snprintf(
-            msg_buf[waiting], sizeof(msg_buf), "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(i).c_str(), name.c_str(),
+            msg_buf[waiting], sizeof(msg_buf), "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(
+              i).c_str(), name.c_str(),
             WiFi.channel(i), WiFi.RSSI(i), nh_.now().sec, nh_.now().nsec);
           waiting++;
         }

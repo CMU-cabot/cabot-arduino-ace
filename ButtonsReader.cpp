@@ -43,10 +43,10 @@ void ButtonsReader::update()
   bool reading_5 = cm.switch_center;
 
   b_msg_.data = reading_1 ? 0x01 : 0x00 |
-                reading_2 ? 0x02 : 0x00 |
-                reading_3 ? 0x04 : 0x00 |
-                reading_4 ? 0x08 : 0x00 |
-                reading_5 ? 0x10 : 0x00;
+    reading_2 ? 0x02 : 0x00 |
+    reading_3 ? 0x04 : 0x00 |
+    reading_4 ? 0x08 : 0x00 |
+    reading_5 ? 0x10 : 0x00;
 
   b_pub_.publish(&b_msg_);
 }
