@@ -27,14 +27,14 @@
 //#define VIB4_PIN (17)   //right
 
 // keep the instance as static for callback
-VibratorController_ace * inst;
+VibratorController * inst;
 
 int ff2percent(int ff)
 {
   return (int)((double)(ff * 100) / 255.0);
 }
 
-VibratorController_ace::VibratorController_ace(ros::NodeHandle & nh, uart_com & cm)
+VibratorController::VibratorController(ros::NodeHandle & nh, uart_com & cm)
 : SensorReader(nh),
   cm(cm),
   vib1_sub_("vibrator1", [](const std_msgs::UInt8 & msg) {
@@ -65,12 +65,12 @@ VibratorController_ace::VibratorController_ace(ros::NodeHandle & nh, uart_com & 
   nh.subscribe(vib4_sub_);
 }
 
-void VibratorController_ace::init()
+void VibratorController::init()
 {
   nh_.loginfo("initializing vibrator controller");
   cm.set_mot(0, 0, 0);
 }
 
-void VibratorController_ace::update()
+void VibratorController::update()
 {
 }

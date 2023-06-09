@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_TOUCH_READER_ACE_H
-#define ARDUINO_NODE_TOUCH_READER_ACE_H
+#ifndef ARDUINO_NODE_TOUCH_READER_H
+#define ARDUINO_NODE_TOUCH_READER_H
 
 #include <Wire.h>
 #include <Adafruit_MPR121.h>
@@ -30,7 +30,7 @@
 #include "SensorReader.h"
 #include "uart_com.h"
 
-class TouchReader_ace : public SensorReader
+class TouchReader : public SensorReader
 {
   Adafruit_MPR121 cap_;
   int16_t touched_;
@@ -44,7 +44,7 @@ class TouchReader_ace : public SensorReader
   uart_com & cm;
 
 public:
-  TouchReader_ace(ros::NodeHandle & nh, uart_com & cm);
+  TouchReader(ros::NodeHandle & nh, uart_com & cm);
   void init();
   void init(uint8_t touch_baseline, uint8_t touch_threshold, uint8_t release_threshold);
   void update();
@@ -53,4 +53,4 @@ private:
   void set_mode(uint8_t touch_baseline);
 };
 
-#endif //ARDUINO_NODE_TOUCH_READER_ACE_H
+#endif //ARDUINO_NODE_TOUCH_READER_H

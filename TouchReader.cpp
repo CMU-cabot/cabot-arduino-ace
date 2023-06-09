@@ -22,7 +22,7 @@
 
 #include "TouchReader.h"
 
-TouchReader_ace::TouchReader_ace(ros::NodeHandle & nh, uart_com & cm)
+TouchReader::TouchReader(ros::NodeHandle & nh, uart_com & cm)
 : SensorReader(nh),
   cm(cm),
   touch_pub_("touch", &touch_msg_),
@@ -34,13 +34,13 @@ TouchReader_ace::TouchReader_ace(ros::NodeHandle & nh, uart_com & cm)
   //nh.advertise(vel_pub_);
 }
 
-void TouchReader_ace::init()
+void TouchReader::init()
 {
   //TODO
   initialized_ = true;
 }
 
-void TouchReader_ace::init(
+void TouchReader::init(
   uint8_t touch_baseline, uint8_t touch_threshold,
   uint8_t release_threshold)
 {
@@ -49,12 +49,12 @@ void TouchReader_ace::init(
   initialized_ = true;
 }
 
-void TouchReader_ace::set_mode(uint8_t touch_baseline)
+void TouchReader::set_mode(uint8_t touch_baseline)
 {
   nh_.loginfo("Touch ready");
 }
 
-void TouchReader_ace::update()
+void TouchReader::update()
 {
   if (!initialized_) {
     return;

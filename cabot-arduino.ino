@@ -84,15 +84,15 @@ uart_com urt_cm(nh);
 // sensors
 BarometerReader bmpReader(nh);
 //ButtonsReader buttonsReader(nh, BTN1_PIN, BTN2_PIN, BTN3_PIN, BTN4_PIN);
-ButtonsReader_ace buttonsReader(nh, urt_cm);
+ButtonsReader buttonsReader(nh, urt_cm);
 IMUReader imuReader(nh);
 WiFiReader wifiReader(nh);
 //TouchReader touchReader(nh);
-TouchReader_ace touchReader(nh, urt_cm);
+TouchReader touchReader(nh, urt_cm);
 
 // controllers
 //VibratorController vibratorController(nh, VIB1_PIN, VIB2_PIN, VIB3_PIN, VIB4_PIN);
-VibratorController_ace vibratorController(nh, urt_cm);
+VibratorController vibratorController(nh, urt_cm);
 Heartbeat heartbeat(LED_BUILTIN, HEARTBEAT_DELAY);
 
 

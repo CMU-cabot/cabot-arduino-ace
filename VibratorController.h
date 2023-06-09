@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
-#define ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
+#ifndef ARDUINO_NODE_VIBRATOR_CONTROLLER_H
+#define ARDUINO_NODE_VIBRATOR_CONTROLLER_H
 
 #include <Wire.h>
 #include <std_msgs/UInt8.h>
@@ -36,7 +36,7 @@
 //#define VIB3_PIN (18)  //left
 //#define VIB4_PIN (17)   //right
 
-class VibratorController_ace : public SensorReader
+class VibratorController : public SensorReader
 {
   ros::Subscriber<std_msgs::UInt8> vib1_sub_;
   ros::Subscriber<std_msgs::UInt8> vib2_sub_;
@@ -45,7 +45,7 @@ class VibratorController_ace : public SensorReader
   uart_com & cm;
 
 public:
-  VibratorController_ace(ros::NodeHandle & nh, uart_com & cm);
+  VibratorController(ros::NodeHandle & nh, uart_com & cm);
   void init();
   void update();
 };

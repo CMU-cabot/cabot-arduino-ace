@@ -26,7 +26,7 @@
 //#define BTN3_PIN (4) // left
 //#define BTN4_PIN (5) // right
 
-ButtonsReader_ace::ButtonsReader_ace(ros::NodeHandle & nh, uart_com & cm)
+ButtonsReader::ButtonsReader(ros::NodeHandle & nh, uart_com & cm)
 : SensorReader(nh),
   cm(cm),
   /*b1_pub_("pushed_1", &b1_msg_),
@@ -44,7 +44,7 @@ ButtonsReader_ace::ButtonsReader_ace(ros::NodeHandle & nh, uart_com & cm)
   nh.advertise(b_pub_);
 }
 
-void ButtonsReader_ace::init()
+void ButtonsReader::init()
 {
   /*pinMode(b1_pin_, INPUT_PULLUP);
   pinMode(b2_pin_, INPUT_PULLUP);
@@ -52,7 +52,7 @@ void ButtonsReader_ace::init()
   pinMode(b4_pin_, INPUT_PULLUP);*/
 }
 
-void ButtonsReader_ace::update()
+void ButtonsReader::update()
 {
   bool reading_1 = cm.switch_up;
   bool reading_2 = cm.switch_down;
