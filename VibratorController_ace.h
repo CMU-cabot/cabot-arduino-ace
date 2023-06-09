@@ -1,7 +1,5 @@
-#include <analogWrite.h>
-
 /*******************************************************************************
- * Copyright (c) 2020  Carnegie Mellon University
+ * Copyright (c) 2020, 2022 Carnegie Mellon University, IBM Corporation, and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +20,32 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_HEARTBEAT_H
-#define ARDUINO_NODE_HEARTBEAT_H
+#ifndef ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
+#define ARDUINO_NODE_VIBRATOR_CONTROLLER_ACE_H
 
-#include <Arduino.h>
+#include <Wire.h>
+#include <std_msgs/UInt8.h>
+#include "SensorReader.h"
 #ifdef ESP32
 #include <analogWrite.h>
 #endif
+#include "uart_com.h"
 
-class Heartbeat {
-  int led_pin_;
-  int delay_;
-  int status_;
+//#define VIB1_PIN (19)  //front
+//#define VIB2_PIN (20)   //back //not using
+//#define VIB3_PIN (18)  //left
+//#define VIB4_PIN (17)   //right
+
+class VibratorController_ace: public SensorReader {
+  ros::Subscriber<std_msgs::UInt8> vib1_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib2_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib3_sub_;
+  ros::Subscriber<std_msgs::UInt8> vib4_sub_;
+  uart_com& cm;
 public:
-Heartbeat(int led_pin, int delay):
-  led_pin_(led_pin),
-  delay_(delay),
-  status_(0)
-  {
-  }
-
-  void init() {
-    pinMode(led_pin_, OUTPUT);
-    analogWrite(led_pin_, 0xff);
-  }
-
-  void update() {
-    status_ = status_+1;
-    analogWrite(led_pin_, (int)(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
-  }
+  VibratorController_ace(ros::NodeHandle &nh, uart_com& cm);
+  void init();
+  void update();
 };
 
-#endif // ARDUINO_NODE_HEARTBEAT_H
+#endif //ARDUINO_NODE_VIBRATOR_CONTROLLER_H

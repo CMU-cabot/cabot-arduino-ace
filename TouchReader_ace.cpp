@@ -1,7 +1,5 @@
-#include <analogWrite.h>
-
 /*******************************************************************************
- * Copyright (c) 2020  Carnegie Mellon University
+ * Copyright (c) 2020, 2022 Carnegie Mellon University, IBM Corporation, and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,35 +20,46 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_HEARTBEAT_H
-#define ARDUINO_NODE_HEARTBEAT_H
+#include "TouchReader_ace.h"
 
-#include <Arduino.h>
-#ifdef ESP32
-#include <analogWrite.h>
-#endif
+TouchReader_ace::TouchReader_ace(ros::NodeHandle &nh, uart_com& cm):
+  SensorReader(nh),
+  cm(cm),
+  touch_pub_("touch", &touch_msg_),
+  raw_pub_("touch_raw", &raw_msg_),
+  vel_pub_("touch_speed", &vel_msg_)
+{
+  nh.advertise(touch_pub_);
+  nh.advertise(raw_pub_);
+  nh.advertise(vel_pub_);
+}
 
-class Heartbeat {
-  int led_pin_;
-  int delay_;
-  int status_;
-public:
-Heartbeat(int led_pin, int delay):
-  led_pin_(led_pin),
-  delay_(delay),
-  status_(0)
-  {
+void TouchReader_ace::init() {
+  //TODO
+  initialized_ = true;
+}
+
+void TouchReader_ace::init(uint8_t touch_baseline, uint8_t touch_threshold, uint8_t release_threshold) {
+  //cm.set_thresh(touch_threshold);
+  nh_.loginfo("Touch initialized");
+  initialized_ = true;
+}
+
+void TouchReader_ace::set_mode(uint8_t touch_baseline) {
+  nh_.loginfo("Touch ready");
+}
+
+void TouchReader_ace::update() {
+  if (!initialized_) {
+    return;
   }
-
-  void init() {
-    pinMode(led_pin_, OUTPUT);
-    analogWrite(led_pin_, 0xff);
-  }
-
-  void update() {
-    status_ = status_+1;
-    analogWrite(led_pin_, (int)(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
-  }
-};
-
-#endif // ARDUINO_NODE_HEARTBEAT_H
+  int touched = cm.touch ? 1 : 0;
+  touch_msg_.data = touched;
+  touch_pub_.publish( &touch_msg_ );
+  
+  raw_msg_.data = cm.capacitance;//TBR
+  raw_pub_.publish( &raw_msg_ );
+  
+  vel_msg_.data = (touched & 0x01) ? 2.0 : 0;
+  vel_pub_.publish( &vel_msg_ );
+}

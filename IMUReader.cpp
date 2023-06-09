@@ -52,7 +52,10 @@ void IMUReader::init(uint8_t *offsets) {
   if (offsets != NULL) {
     imu_.setSensorOffsets(offsets);
   }
-  imu_.setExtCrystalUse(true);
+  imu_.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P6);
+  imu_.setAxisSign(Adafruit_BNO055::REMAP_SIGN_P6);
+
+  imu_.setExtCrystalUse(true); // set crystal AFTER setting sensor parameters
 
   // time 2 + orientation 4 + angular_velocy 3 + linear_acceleration 3
   imu_msg_.data = (float*)malloc(sizeof(float)*12);
@@ -92,10 +95,11 @@ void IMUReader::update() {
 
   // publish
   imu_pub_.publish( &imu_msg_ );
+}
 
-  if (in_calibration_ == false) {
-    return;
-  }
+void IMUReader::update_calibration() {
+  if (!initialized_) {
+    return;                                                                                                                           }
 
   uint8_t *offsets = calibration_msg_.data;
   imu_.getSensorOffsets(offsets);
