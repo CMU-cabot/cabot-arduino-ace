@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#include "ButtonsReader_ace.h"
+#include "ButtonsReader.h"
 //#define BTN1_PIN (2) // up
 //#define BTN2_PIN (3) // down
 //#define BTN3_PIN (4) // left

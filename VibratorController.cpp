@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
- #include "VibratorController_ace.h"
+ #include "VibratorController.h"
 
 //#define VIB1_PIN (19)  //front
 //#define VIB2_PIN (20)   //back //not using

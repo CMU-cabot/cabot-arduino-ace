@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#include "TouchReader_ace.h"
+#include "TouchReader.h"
 
 TouchReader_ace::TouchReader_ace(ros::NodeHandle &nh, uart_com& cm):
   SensorReader(nh),

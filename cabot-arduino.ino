@@ -36,15 +36,12 @@
 
 #include "uart_com.h"
 #include "BarometerReader.h"
-//#include "ButtonsReader.h"
-#include "ButtonsReader_ace.h"
+#include "ButtonsReader.h"
 #include "Heartbeat.h"
 #include "IMUReader.h"
 #include "WiFiReader.h"
-//#include "TouchReader.h"
-#include "TouchReader_ace.h"
-//#include "VibratorController.h"
-#include "VibratorController_ace.h"
+#include "TouchReader.h"
+#include "VibratorController.h"
 
 ros::NodeHandle nh;
 Timer<10> timer;
