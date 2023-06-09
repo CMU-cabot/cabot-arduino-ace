@@ -16,11 +16,14 @@ jobs:
           sketch-paths: |
             - .
           fqbn: "esp32:esp32:esp32"
+          platforms: |
+            - source-url: https://dl.espressif.com/dl/package_esp32_index.json
+              name: esp32:esp32
           libraries: |
             - name: Rosserial Arduino Library
               version: 0.9.1
             - name: Adafruit BNO055
-            - name: Adafruit BMP280 Library
+            - name: Adafruit BME280 Library
             - name: Adafruit MPR121
             - name: arduino-timer
             - name: ESP32 AnalogWrite
