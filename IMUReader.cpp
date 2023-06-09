@@ -24,8 +24,8 @@
 
 #define D2R 0.0174532925
 
-IMUReader::IMUReader(ros::NodeHandle &nh):
-  SensorReader(nh),
+IMUReader::IMUReader(ros::NodeHandle & nh)
+: SensorReader(nh),
   imu_pub_("imu_raw", &imu_msg_),
   calibration_pub_("calibration", &calibration_msg_)
 {
@@ -33,18 +33,20 @@ IMUReader::IMUReader(ros::NodeHandle &nh):
   nh_.advertise(calibration_pub_);
 }
 
-void IMUReader::calibration() {
+void IMUReader::calibration()
+{
   in_calibration_ = true;
   init();
 }
 
-void IMUReader::init() {
+void IMUReader::init()
+{
   init(NULL);
 }
 
-void IMUReader::init(uint8_t *offsets) {
-  if(!imu_.begin())
-  {
+void IMUReader::init(uint8_t * offsets)
+{
+  if (!imu_.begin()) {
     nh_.loginfo("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     return;
   }
@@ -58,22 +60,23 @@ void IMUReader::init(uint8_t *offsets) {
   imu_.setExtCrystalUse(true); // set crystal AFTER setting sensor parameters
 
   // time 2 + orientation 4 + angular_velocy 3 + linear_acceleration 3
-  imu_msg_.data = (float*)malloc(sizeof(float)*12);
+  imu_msg_.data = (float *)malloc(sizeof(float) * 12);
   imu_msg_.data_length = 12;
 
-  calibration_msg_.data = (uint8_t*)malloc(sizeof(uint8_t)*26);
+  calibration_msg_.data = (uint8_t *)malloc(sizeof(uint8_t) * 26);
   calibration_msg_.data_length = 26;
 }
 
-void IMUReader::update() {
+void IMUReader::update()
+{
   if (!initialized_) {
     return;
   }
   // put int32 as float32
   auto timestamp = nh_.now();
-  imu_msg_.data[0] = *((float*)(&timestamp.sec));
-  imu_msg_.data[1] = *((float*)(&timestamp.nsec));
-  
+  imu_msg_.data[0] = *((float *)(&timestamp.sec));
+  imu_msg_.data[1] = *((float *)(&timestamp.nsec));
+
   imu::Quaternion q = imu_.getQuat();
 
   imu_msg_.data[2] = q.x();
@@ -83,10 +86,10 @@ void IMUReader::update() {
 
   imu::Vector<3> xyz = imu_.getVector(Adafruit_BNO055::VECTOR_GYROSCOPE);
 
-  imu_msg_.data[6] = xyz.x()*D2R;
-  imu_msg_.data[7] = xyz.y()*D2R;
-  imu_msg_.data[8] = xyz.z()*D2R;
-    
+  imu_msg_.data[6] = xyz.x() * D2R;
+  imu_msg_.data[7] = xyz.y() * D2R;
+  imu_msg_.data[8] = xyz.z() * D2R;
+
   xyz = imu_.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
 
   imu_msg_.data[9] = xyz.x();
@@ -94,16 +97,18 @@ void IMUReader::update() {
   imu_msg_.data[11] = xyz.z();
 
   // publish
-  imu_pub_.publish( &imu_msg_ );
+  imu_pub_.publish(&imu_msg_);
 }
 
-void IMUReader::update_calibration() {
+void IMUReader::update_calibration()
+{
   if (!initialized_) {
-    return;                                                                                                                           }
+    return;
+  }
 
-  uint8_t *offsets = calibration_msg_.data;
+  uint8_t * offsets = calibration_msg_.data;
   imu_.getSensorOffsets(offsets);
-  imu_.getCalibration(offsets+22, offsets+23, offsets+24, offsets+25);
+  imu_.getCalibration(offsets + 22, offsets + 23, offsets + 24, offsets + 25);
 
-  calibration_pub_.publish( &calibration_msg_);
+  calibration_pub_.publish(&calibration_msg_);
 }

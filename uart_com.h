@@ -26,61 +26,63 @@
 #define CMD_BUF_MAX (128)
 #define MAX_LEN  64
 
-class uart_com: SensorReader{
-  private:
+class uart_com : SensorReader
+{
+private:
   //for parsing
-    char CmdBuf[CMD_BUF_MAX]; //command buffer
-    int CmdBuf_wp=0; //Number of stored in command buffer
-    char * words[MAX_LEN];
-    int words_len = 0;
-    char *delim = ",";
-    bool CMD_PARSE_FLAG =false;
-    bool StartFlg =false;
-    
-    unsigned long _last_update_millis = 0;
-    bool _started = false;
-    bool parse_mot();
-    bool parse_mot_r();
-    bool parse_mot_c();
-    bool parse_mot_l();
-    bool parse_thresh();
-    bool parse_sensi();
-    bool parse_dat();
-    bool parse_dat_short();
-    bool parse_dat_shortest();
-    bool parse_error();
-    void StringCmdParse(char c);
-    std_msgs::UInt32 error_msg_;
-    ros::Publisher error_pub_;
-  public:
-    bool touch;
-    int capacitance;
-    int cap_thresh;
-    int sensi = 2;
-    int motor_r;
-    int motor_c;
-    int motor_l;
-    int switch_up;
-    int switch_down;
-    int switch_left;
-    int switch_right;
-    int switch_center;
-    int error_count;
-    uart_com(ros::NodeHandle &nh);
-    void init();
-    void update();
-    void begin(int baud_rate = 38400);
-    void start();
-    void stop();
-    bool is_started();
-    bool is_alive();
-    bool set_mot(int right, int center, int left);
-    bool set_mot_r(int val);
-    bool set_mot_c(int val);
-    bool set_mot_l(int val);
-    bool set_thresh(int thresh);
-    bool set_sensi(int sensi);
-    void publish();
+  char CmdBuf[CMD_BUF_MAX];   //command buffer
+  int CmdBuf_wp = 0; //Number of stored in command buffer
+  char * words[MAX_LEN];
+  int words_len = 0;
+  char * delim = ",";
+  bool CMD_PARSE_FLAG = false;
+  bool StartFlg = false;
+
+  unsigned long _last_update_millis = 0;
+  bool _started = false;
+  bool parse_mot();
+  bool parse_mot_r();
+  bool parse_mot_c();
+  bool parse_mot_l();
+  bool parse_thresh();
+  bool parse_sensi();
+  bool parse_dat();
+  bool parse_dat_short();
+  bool parse_dat_shortest();
+  bool parse_error();
+  void StringCmdParse(char c);
+  std_msgs::UInt32 error_msg_;
+  ros::Publisher error_pub_;
+
+public:
+  bool touch;
+  int capacitance;
+  int cap_thresh;
+  int sensi = 2;
+  int motor_r;
+  int motor_c;
+  int motor_l;
+  int switch_up;
+  int switch_down;
+  int switch_left;
+  int switch_right;
+  int switch_center;
+  int error_count;
+  uart_com(ros::NodeHandle & nh);
+  void init();
+  void update();
+  void begin(int baud_rate = 38400);
+  void start();
+  void stop();
+  bool is_started();
+  bool is_alive();
+  bool set_mot(int right, int center, int left);
+  bool set_mot_r(int val);
+  bool set_mot_c(int val);
+  bool set_mot_l(int val);
+  bool set_thresh(int thresh);
+  bool set_sensi(int sensi);
+  void publish();
 };
 
 #endif

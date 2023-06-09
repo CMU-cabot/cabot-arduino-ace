@@ -44,7 +44,7 @@
 #include "VibratorController.h"
 
 ros::NodeHandle nh;
-Timer<10> timer;
+Timer < 10 > timer;
 
 // configurations
 #define BAUDRATE (115200)
@@ -73,7 +73,6 @@ Timer<10> timer;
 #define VIB3_PIN (10)  //left
 #define VIB4_PIN (9)   //right
 #endif
-
 
 
 #define TOUCH_BASELINE (128)
@@ -105,14 +104,15 @@ void setup()
 
   // connect to rosserial
   nh.initNode();
-  while(!nh.connected()) {nh.spinOnce();}
+  while (!nh.connected()) {nh.spinOnce();}
   nh.loginfo("Connected");
 
   int run_imu_calibration = 0;
   nh.getParam("~run_imu_calibration", &run_imu_calibration, 1, 500);
   if (run_imu_calibration != 0) {
     imuReader.calibration();
-    timer.every(100, [](void*){
+    timer.every(
+      100, [] (void *) {
       imuReader.update();
       imuReader.update_calibration();
       return true;
@@ -122,10 +122,10 @@ void setup()
   }
 
   int calibration_params[22];
-  uint8_t *offsets = NULL;
+  uint8_t * offsets = NULL;
   if (nh.getParam("~calibration_params", calibration_params, 22, 500)) {
-    offsets = (uint8_t*) malloc(sizeof(uint8_t) * 22);
-    for(int i = 0; i < 22; i++) {
+    offsets = (uint8_t *) malloc(sizeof(uint8_t) * 22);
+    for (int i = 0; i < 22; i++) {
       offsets[i] = calibration_params[i] & 0xFF;
     }
   } else {
@@ -136,10 +136,12 @@ void setup()
     nh.logwarn("System, Gyro, Accel, Magnet, 0 (not configured) <-> 3 (configured)");
     nh.logwarn("Specify like calibration_params:=[0, 0, 0, 0 ...]");
     nh.logwarn("Visit the following link to check how to calibrate sensoe");
-    nh.logwarn("https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/device-calibration");
+    nh.logwarn(
+      "https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/device-calibration");
   }
   nh.loginfo("setting up WiFi");
-  wifiReader.init([](char *buf){
+  wifiReader.init(
+    [] (char * buf) {
     //nh.loginfo(buf);//TODO*
   });
 
@@ -169,7 +171,9 @@ void setup()
     release_threshold = touch_params[2];
   }
   char default_values[128];
-  sprintf(default_values, "Using [%d, %d, %d] for touch_params", touch_baseline, touch_threshold, release_threshold);
+  sprintf(
+    default_values, "Using [%d, %d, %d] for touch_params", touch_baseline, touch_threshold,
+    release_threshold);
   nh.loginfo(default_values);
 
   // initialize
@@ -188,39 +192,43 @@ void setup()
   nh.loginfo("setting up heartbeat");
   heartbeat.init();
 
-  
+
   // wait sensors ready
   delay(100);
 
   // set timers
-  timer.every(500, [](void*){
-      bmpReader.update();
-      urt_cm.publish();
-      return true;
-    });
+  timer.every(
+    500, [] (void *) {
+    bmpReader.update();
+    urt_cm.publish();
+    return true;
+  });
 
-  timer.every(20, [](void*){
-      //heartbeat.update();
-      buttonsReader.update();
-      touchReader.update();
-      return true;
-    });
+  timer.every(
+    20, [] (void *) {
+    //heartbeat.update();
+    buttonsReader.update();
+    touchReader.update();
+    return true;
+  });
 
-  timer.every(10, [](void*){
-      imuReader.update();
-      return true;
-    });
-  timer.every(20, [](void*){
+  timer.every(
+    10, [] (void *) {
+    imuReader.update();
+    return true;
+  });
+  timer.every(
+    20, [] (void *) {
     wifiReader.update();
     return true;
   });
-  
+
   nh.loginfo("Arduino is ready");
 }
 
 void loop()
 {
-  timer.tick<void>();
+  timer.tick < void > ();
   urt_cm.update();
   nh.spinOnce();
 }

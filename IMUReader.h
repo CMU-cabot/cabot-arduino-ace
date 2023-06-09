@@ -30,18 +30,20 @@
 #include <std_msgs/UInt8MultiArray.h>
 #include "SensorReader.h"
 
-class IMUReader: public SensorReader {
+class IMUReader : public SensorReader
+{
   Adafruit_BNO055 imu_;
   std_msgs::Float32MultiArray imu_msg_;
   std_msgs::UInt8MultiArray calibration_msg_;
   ros::Publisher imu_pub_;
   ros::Publisher calibration_pub_;
   int in_calibration_;
+
 public:
-  IMUReader(ros::NodeHandle &nh);
+  IMUReader(ros::NodeHandle & nh);
   void calibration();
   void init();
-  void init(uint8_t *offsets);
+  void init(uint8_t * offsets);
   void update();
   void update_calibration();
 };

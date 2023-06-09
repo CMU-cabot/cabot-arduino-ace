@@ -31,7 +31,8 @@
 #include <sensor_msgs/Temperature.h>
 #include "SensorReader.h"
 
-class BarometerReader : public SensorReader{
+class BarometerReader : public SensorReader
+{
   //Adafruit_BMP280 bmp_;
   Adafruit_BME280 bmp_;
   sensor_msgs::FluidPressure fp_msg_;
@@ -40,7 +41,7 @@ class BarometerReader : public SensorReader{
   ros::Publisher tmp_pub_;
 
 public:
-  BarometerReader(ros::NodeHandle &nh);
+  BarometerReader(ros::NodeHandle & nh);
   void init();
   void update();
 };

@@ -29,7 +29,8 @@
 #include "SensorReader.h"
 #include "uart_com.h"
 
-class ButtonsReader_ace: public SensorReader {
+class ButtonsReader_ace : public SensorReader
+{
   /*ros::Publisher b1_pub_;
   ros::Publisher b2_pub_;
   ros::Publisher b3_pub_;
@@ -42,9 +43,10 @@ class ButtonsReader_ace: public SensorReader {
   std_msgs::Bool b4_msg_;
   std_msgs::Bool b5_msg_;*/
   std_msgs::Int8 b_msg_;
-  uart_com& cm;
+  uart_com & cm;
+
 public:
-  ButtonsReader_ace(ros::NodeHandle &nh, uart_com& cm);
+  ButtonsReader_ace(ros::NodeHandle & nh, uart_com & cm);
   void init();
   void update();
 };

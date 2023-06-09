@@ -30,7 +30,8 @@
 #include "SensorReader.h"
 #include "uart_com.h"
 
-class TouchReader_ace: public SensorReader {
+class TouchReader_ace : public SensorReader
+{
   Adafruit_MPR121 cap_;
   int16_t touched_;
   ros::Publisher touch_pub_;
@@ -40,13 +41,14 @@ class TouchReader_ace: public SensorReader {
   std_msgs::Int16 raw_msg_;
   //std_msgs::Float32 vel_msg_;
 
-  uart_com& cm;
+  uart_com & cm;
 
 public:
-  TouchReader_ace(ros::NodeHandle &nh, uart_com& cm);
+  TouchReader_ace(ros::NodeHandle & nh, uart_com & cm);
   void init();
   void init(uint8_t touch_baseline, uint8_t touch_threshold, uint8_t release_threshold);
   void update();
+
 private:
   void set_mode(uint8_t touch_baseline);
 };

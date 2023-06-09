@@ -43,7 +43,7 @@
 
 // maximum wait cycle
 // if you have APs in 3 channels in your environment, the maximum wait time is like
-// (3*DEFAULT_MAX_SKIP)*(DEFAULT_SCAN_DURATION+SCAN_INTERVAL) = (3*14)*105 = 42*105 = 
+// (3*DEFAULT_MAX_SKIP)*(DEFAULT_SCAN_DURATION+SCAN_INTERVAL) = (3*14)*105 = 42*105 =
 #define DEFAULT_MAX_SKIP (14)
 
 // maximum queue size, ignore if exceeds
@@ -55,7 +55,8 @@
 #define PARAM_TIMEOUT (100)
 
 
-class WiFiReader: public SensorReader {
+class WiFiReader : public SensorReader
+{
   std_msgs::String wifi_scan_msg_;
   ros::Publisher wifi_scan_pub_;
   int max_skip = DEFAULT_MAX_SKIP;
@@ -63,7 +64,7 @@ class WiFiReader: public SensorReader {
   int scan_duration = DEFAULT_SCAN_DURATION;
   int scan_interval = DEFAULT_SCAN_INTERVAL;
   bool verbose = DEFAULT_VERBOSITY;
-  
+
   bool isScanning = false;
   unsigned long scanningStart = 0;
   int channel = 0;
@@ -72,24 +73,24 @@ class WiFiReader: public SensorReader {
   int aps[MAX_CHANNEL];
   unsigned long lastseen[MAX_CHANNEL];
   char buf[256];
-  
+
   // BSSID=17, SSID=32, CH=2, RSSI=4, sec=10, nsec=10, commas=5, total 80 + margin 20
-  char msg_buf[MAX_WAITING][100]; 
+  char msg_buf[MAX_WAITING][100];
   int waiting = 0;
   int all_zero_count = 0;
 
   void showScanStatus();
-  void (*callback_)(char*);
+  void (* callback_)(char *);
 
   void handleScan();
   void checkQueue();
   void checkZeroScan(int maximum);
-  
+
 public:
-  WiFiReader(ros::NodeHandle &nh);
-  void init(void (*callback)(char*));
+  WiFiReader(ros::NodeHandle & nh);
+  void init(void (* callback)(char *));
   void init();
-  void set_data(char *data);
+  void set_data(char * data);
   void update();
 };
 

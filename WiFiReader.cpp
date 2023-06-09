@@ -24,8 +24,8 @@
 
 extern void restart();
 
-WiFiReader::WiFiReader(ros::NodeHandle &nh):
-  SensorReader(nh),
+WiFiReader::WiFiReader(ros::NodeHandle & nh)
+: SensorReader(nh),
   wifi_scan_pub_("wifi_scan_str", &wifi_scan_msg_)
 {
   WiFi.mode(WIFI_STA);
@@ -33,12 +33,14 @@ WiFiReader::WiFiReader(ros::NodeHandle &nh):
   nh_.advertise(wifi_scan_pub_);
 }
 
-void WiFiReader::init(void (*callback)(char*)) {
+void WiFiReader::init(void (* callback)(char *))
+{
   callback_ = callback;
   init();
 }
 
-void WiFiReader::init() {
+void WiFiReader::init()
+{
 
   if (!nh_.getParam("~verbose", &verbose, 1, PARAM_TIMEOUT)) {
     verbose = DEFAULT_VERBOSITY;
@@ -68,17 +70,18 @@ void WiFiReader::showScanStatus()
 {
   sprintf(buf, "WiFi: ");
   for (int i = 0; i < n_channel; i++) {
-    sprintf(buf+strlen(buf), "%2d|", aps[i]);
+    sprintf(buf + strlen(buf), "%2d|", aps[i]);
   }
   //sprintf(buf+strlen(buf), "%2d", channel+1);
   //sprintf(buf+strlen(buf), "%s", nh_.connected()?"*":"-");
   //sprintf(buf+strlen(buf), ",%s", isScanning?"*":"-");
-  sprintf(buf+strlen(buf), "%2d|", all_zero_count);
+  sprintf(buf + strlen(buf), "%2d|", all_zero_count);
 
   callback_(buf);
 }
 
-void WiFiReader::update() {
+void WiFiReader::update()
+{
   handleScan();
 }
 
@@ -115,7 +118,7 @@ void WiFiReader::handleScan()
       //                      bool passive = false,
       //                      uint32_t max_ms_per_chan = 300,
       //                      uint8_t channel = 0);
-      int n = WiFi.scanNetworks(true, false, false, scan_duration, channel+1);
+      int n = WiFi.scanNetworks(true, false, false, scan_duration, channel + 1);
       scanningStart = millis();
       count[channel] = 0;
       isScanning = true;
@@ -123,40 +126,41 @@ void WiFiReader::handleScan()
     } else {
       // skip until skip count
       count[channel] += 1;
-      channel = (channel+1)%n_channel;
+      channel = (channel + 1) % n_channel;
     }
-  }
-  else {
+  } else {
     int n = 0;
     if ((n = WiFi.scanComplete()) >= 0) {
       // scan completed
       aps[channel] = n;
       showScanStatus();
       if (verbose) {
-  sprintf(buf, "[ch:%2d][%3dAPs][skip:%2d/%2d]%3dms,%5dms",
-    channel+1, n, skip[channel], max_skip,
-    millis()-scanningStart, millis()-lastseen[channel]);
-  //nh_.loginfo(buf);
+        sprintf(
+          buf, "[ch:%2d][%3dAPs][skip:%2d/%2d]%3dms,%5dms",
+          channel + 1, n, skip[channel], max_skip,
+          millis() - scanningStart, millis() - lastseen[channel]);
+        //nh_.loginfo(buf);
       }
       lastseen[channel] = millis();
-      scanningStart = millis()+scan_interval;
+      scanningStart = millis() + scan_interval;
 
       if (n == 0) {
-  // increments skip count if no AP is found at the current channel
-        skip[channel] = min(skip[channel]+1, max_skip);
+        // increments skip count if no AP is found at the current channel
+        skip[channel] = min(skip[channel] + 1, max_skip);
       } else {
-  // if APs are found, put string into the queue
+        // if APs are found, put string into the queue
         skip[channel] = 0;
         for (int i = 0; i < n && waiting < MAX_WAITING; ++i) {
           String name = WiFi.SSID(i);
-          name.replace(","," ");
-          sprintf(msg_buf[waiting], "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(i).c_str(), name.c_str(),
-                  WiFi.channel(i), WiFi.RSSI(i), nh_.now().sec, nh_.now().nsec);
-    waiting++;
+          name.replace(",", " ");
+          sprintf(
+            msg_buf[waiting], "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(i).c_str(), name.c_str(),
+            WiFi.channel(i), WiFi.RSSI(i), nh_.now().sec, nh_.now().nsec);
+          waiting++;
         }
       }
 
-      channel = (channel+1) % n_channel;
+      channel = (channel + 1) % n_channel;
       isScanning = false;
     } else {
       // waiting scan result
@@ -177,7 +181,7 @@ void WiFiReader::checkQueue()
 void WiFiReader::checkZeroScan(int maximum)
 {
   bool all_zero = true;
-  for(int i = 0; i < n_channel; i++) {
+  for (int i = 0; i < n_channel; i++) {
     all_zero = all_zero && aps[i] == 0;
   }
   if (all_zero) {

@@ -27,31 +27,36 @@
 //#define VIB4_PIN (17)   //right
 
 // keep the instance as static for callback
-VibratorController_ace *inst;
+VibratorController_ace * inst;
 
-int ff2percent(int ff){
+int ff2percent(int ff)
+{
   return (int)((double)(ff * 100) / 255.0);
 }
 
-VibratorController_ace::VibratorController_ace(ros::NodeHandle &nh, uart_com& cm):
-  SensorReader(nh),
+VibratorController_ace::VibratorController_ace(ros::NodeHandle & nh, uart_com & cm)
+: SensorReader(nh),
   cm(cm),
-  vib1_sub_("vibrator1", [](const std_msgs::UInt8& msg) {
-    inst->nh_.loginfo("setting vibrator1");
-    String buf="setting vibfrator1,";
-    buf += String(msg.data);
-    buf += ",";
-    buf += String(inst->cm.motor_r);
-    buf += ",";
-    buf += String(inst->cm.motor_c);
-    buf += ",";
-    buf += String(inst->cm.motor_l);
-    inst->nh_.loginfo(buf.c_str());
-    inst->cm.set_mot_c(ff2percent(msg.data));
+  vib1_sub_("vibrator1", [](const std_msgs::UInt8 & msg) {
+      inst->nh_.loginfo("setting vibrator1");
+      String buf = "setting vibfrator1,";
+      buf += String(msg.data);
+      buf += ",";
+      buf += String(inst->cm.motor_r);
+      buf += ",";
+      buf += String(inst->cm.motor_c);
+      buf += ",";
+      buf += String(inst->cm.motor_l);
+      inst->nh_.loginfo(buf.c_str());
+      inst->cm.set_mot_c(ff2percent(msg.data));
     }),
-  vib2_sub_("vibrator2", [](const std_msgs::UInt8& msg) {/*nop: not supported*/}),
-  vib3_sub_("vibrator3", [](const std_msgs::UInt8& msg) {inst->cm.set_mot_l(ff2percent(msg.data));}),
-  vib4_sub_("vibrator4", [](const std_msgs::UInt8& msg) {inst->cm.set_mot_r(ff2percent(msg.data));})
+  vib2_sub_("vibrator2", [](const std_msgs::UInt8 & msg) { /*nop: not supported*/}),
+  vib3_sub_(
+    "vibrator3",
+    [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_l(ff2percent(msg.data));}),
+  vib4_sub_(
+    "vibrator4",
+    [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_r(ff2percent(msg.data));})
 {
   inst = this;
   nh.subscribe(vib1_sub_);
@@ -60,10 +65,12 @@ VibratorController_ace::VibratorController_ace(ros::NodeHandle &nh, uart_com& cm
   nh.subscribe(vib4_sub_);
 }
 
-void VibratorController_ace::init(){
+void VibratorController_ace::init()
+{
   nh_.loginfo("initializing vibrator controller");
-  cm.set_mot(0,0,0);
+  cm.set_mot(0, 0, 0);
 }
 
-void VibratorController_ace::update() {
+void VibratorController_ace::update()
+{
 }

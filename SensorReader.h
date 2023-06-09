@@ -32,18 +32,19 @@
 #endif
 #include <Arduino.h>
 
-class SensorReader {
+class SensorReader
+{
 protected:
-  ros::NodeHandle &nh_;
+  ros::NodeHandle & nh_;
   bool initialized_;
-  
+
 public:
-SensorReader(ros::NodeHandle &nh):
-  nh_(nh),
-  initialized_(false)
+  SensorReader(ros::NodeHandle & nh)
+  : nh_(nh),
+    initialized_(false)
   {}
-  virtual void init()=0;
-  virtual void update()=0;
+  virtual void init() = 0;
+  virtual void update() = 0;
 };
 
 #endif //ARDUINO_NODE_SENSORREADER_H

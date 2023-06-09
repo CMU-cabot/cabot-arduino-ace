@@ -30,25 +30,29 @@
 #include <analogWrite.h>
 #endif
 
-class Heartbeat {
+class Heartbeat
+{
   int led_pin_;
   int delay_;
   int status_;
+
 public:
-Heartbeat(int led_pin, int delay):
-  led_pin_(led_pin),
-  delay_(delay),
-  status_(0)
+  Heartbeat(int led_pin, int delay)
+  : led_pin_(led_pin),
+    delay_(delay),
+    status_(0)
   {
   }
 
-  void init() {
+  void init()
+  {
     pinMode(led_pin_, OUTPUT);
     analogWrite(led_pin_, 0xff);
   }
 
-  void update() {
-    status_ = status_+1;
+  void update()
+  {
+    status_ = status_ + 1;
     analogWrite(led_pin_, (int)(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
   }
 };
