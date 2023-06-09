@@ -22,8 +22,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_HEARTBEAT_H
-#define ARDUINO_NODE_HEARTBEAT_H
+#ifndef HEARTBEAT_H_
+#define HEARTBEAT_H_
 
 #include <Arduino.h>
 #ifdef ESP32
@@ -53,8 +53,8 @@ public:
   void update()
   {
     status_ = status_ + 1;
-    analogWrite(led_pin_, (int)(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
+    analogWrite(led_pin_, static_cast<int>(sin(6.28 * status_ * delay_ / 1000.0) * 127 + 127));
   }
 };
 
-#endif // ARDUINO_NODE_HEARTBEAT_H
+#endif  // HEARTBEAT_H_

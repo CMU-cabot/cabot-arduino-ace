@@ -21,6 +21,7 @@
  *******************************************************************************/
 
 #include "WiFiReader.h"
+#include <algorithm>
 
 extern void restart();
 
@@ -41,7 +42,6 @@ void WiFiReader::init(void (* callback)(char *))
 
 void WiFiReader::init()
 {
-
   if (!nh_.getParam("~verbose", &verbose, 1, PARAM_TIMEOUT)) {
     verbose = DEFAULT_VERBOSITY;
   }
@@ -68,14 +68,11 @@ void WiFiReader::init()
 
 void WiFiReader::showScanStatus()
 {
-  sprintf(buf, "WiFi: ");
+  snprintf(buf, sizeof(buf), "WiFi: ");
   for (int i = 0; i < n_channel; i++) {
-    sprintf(buf + strlen(buf), "%2d|", aps[i]);
+    snprintf(buf + strlen(buf), sizeof(buf), "%2d|", aps[i]);
   }
-  //sprintf(buf+strlen(buf), "%2d", channel+1);
-  //sprintf(buf+strlen(buf), "%s", nh_.connected()?"*":"-");
-  //sprintf(buf+strlen(buf), ",%s", isScanning?"*":"-");
-  sprintf(buf + strlen(buf), "%2d|", all_zero_count);
+  snprintf(buf + strlen(buf), sizeof(buf), "%2d|", all_zero_count);
 
   callback_(buf);
 }
@@ -96,7 +93,7 @@ void WiFiReader::handleScan()
     if (!nh_.connected()) {
       restart();
     }
-    // TODO
+    // TODO(daisukes)
     // not sure why, but when the serial is disconnected
     // sometimes it can be a strange state that nh.connected() == true and WiFi Scan does not work
     // restart the hardware if the WiFi scan returns no result for 10 consequtive cycles
@@ -122,7 +119,7 @@ void WiFiReader::handleScan()
       scanningStart = millis();
       count[channel] = 0;
       isScanning = true;
-      //showScanStatus();
+      // showScanStatus();
     } else {
       // skip until skip count
       count[channel] += 1;
@@ -135,11 +132,11 @@ void WiFiReader::handleScan()
       aps[channel] = n;
       showScanStatus();
       if (verbose) {
-        sprintf(
-          buf, "[ch:%2d][%3dAPs][skip:%2d/%2d]%3dms,%5dms",
+        snprintf(
+          buf, sizeof(buf), "[ch:%2d][%3dAPs][skip:%2d/%2d]%3dms,%5dms",
           channel + 1, n, skip[channel], max_skip,
           millis() - scanningStart, millis() - lastseen[channel]);
-        //nh_.loginfo(buf);
+        // nh_.loginfo(buf);
       }
       lastseen[channel] = millis();
       scanningStart = millis() + scan_interval;
@@ -153,8 +150,8 @@ void WiFiReader::handleScan()
         for (int i = 0; i < n && waiting < MAX_WAITING; ++i) {
           String name = WiFi.SSID(i);
           name.replace(",", " ");
-          sprintf(
-            msg_buf[waiting], "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(i).c_str(), name.c_str(),
+          snprintf(
+            msg_buf[waiting], sizeof(msg_buf), "%s,%s,%d,%d,%d,%d", WiFi.BSSIDstr(i).c_str(), name.c_str(),
             WiFi.channel(i), WiFi.RSSI(i), nh_.now().sec, nh_.now().nsec);
           waiting++;
         }

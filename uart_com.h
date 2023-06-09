@@ -19,26 +19,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
-#include <std_msgs/UInt32.h>
+
+#ifndef UART_COM_H_
+#define UART_COM_H_
+
 #include "SensorReader.h"
-#ifndef uart_com_h
-#define uart_com_h
+
 #define CMD_BUF_MAX (128)
 #define MAX_LEN  64
 
 class uart_com : SensorReader
 {
 private:
-  //for parsing
-  char CmdBuf[CMD_BUF_MAX];   //command buffer
-  int CmdBuf_wp = 0; //Number of stored in command buffer
+  // for parsing
+  char CmdBuf[CMD_BUF_MAX];   // command buffer
+  int CmdBuf_wp = 0;  // Number of stored in command buffer
   char * words[MAX_LEN];
   int words_len = 0;
   char * delim = ",";
   bool CMD_PARSE_FLAG = false;
   bool StartFlg = false;
 
-  unsigned long _last_update_millis = 0;
+  uint32_t _last_update_millis = 0;
   bool _started = false;
   bool parse_mot();
   bool parse_mot_r();
@@ -68,7 +70,7 @@ public:
   int switch_right;
   int switch_center;
   int error_count;
-  uart_com(ros::NodeHandle & nh);
+  explicit uart_com(ros::NodeHandle & nh);
   void init();
   void update();
   void begin(int baud_rate = 38400);
@@ -85,4 +87,4 @@ public:
   void publish();
 };
 
-#endif
+#endif  // UART_COM_H_

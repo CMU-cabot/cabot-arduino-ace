@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_SENSORREADER_H
-#define ARDUINO_NODE_SENSORREADER_H
+#ifndef SENSORREADER_H_
+#define SENSORREADER_H_
 
 #ifdef ESP32
 #undef ESP32
@@ -39,7 +39,7 @@ protected:
   bool initialized_;
 
 public:
-  SensorReader(ros::NodeHandle & nh)
+  explicit SensorReader(ros::NodeHandle & nh)
   : nh_(nh),
     initialized_(false)
   {}
@@ -47,4 +47,4 @@ public:
   virtual void update() = 0;
 };
 
-#endif //ARDUINO_NODE_SENSORREADER_H
+#endif  // SENSORREADER_H_

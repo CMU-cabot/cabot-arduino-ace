@@ -20,28 +20,17 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_BUTTONS_READER_H
-#define ARDUINO_NODE_BUTTONS_READER_H
+#ifndef BUTTONSREADER_H_
+#define BUTTONSREADER_H_
 
 #include <Wire.h>
-#include <std_msgs/Bool.h>
 #include <std_msgs/Int8.h>
 #include "SensorReader.h"
 #include "uart_com.h"
 
 class ButtonsReader : public SensorReader
 {
-  /*ros::Publisher b1_pub_;
-  ros::Publisher b2_pub_;
-  ros::Publisher b3_pub_;
-  ros::Publisher b4_pub_;
-  ros::Publisher b5_pub_;*/
   ros::Publisher b_pub_;
-  /*std_msgs::Bool b1_msg_;
-  std_msgs::Bool b2_msg_;
-  std_msgs::Bool b3_msg_;
-  std_msgs::Bool b4_msg_;
-  std_msgs::Bool b5_msg_;*/
   std_msgs::Int8 b_msg_;
   uart_com & cm;
 
@@ -51,4 +40,4 @@ public:
   void update();
 };
 
-#endif //ARDUINO_NODE_BUTTONS_READER_H
+#endif  // BUTTONSREADER_H_

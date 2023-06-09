@@ -19,9 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *******************************************************************************/
+
 #include "uart_com.h"
-#include "Arduino.h"
-#include "stdlib.h"
+#include <Arduino.h>
+#include <stdlib.h>
 
 #define UART Serial2
 
@@ -37,10 +38,10 @@ bool IsDecString(char * str)
   }
 }
 
-unsigned short DecStringToDec(char * str)
+uint16_t DecStringToDec(char * str)
 {
   char * endptr;
-  unsigned short val = strtol(str, &endptr, 10);
+  uint16_t val = strtol(str, &endptr, 10);
 
   if (*endptr == 0) {
     return val;
@@ -222,7 +223,7 @@ void uart_com::StringCmdParse(char c)
   CMD_PARSE_FLAG = true;
 
   if (c == '\r') {
-    //ignore '\r'
+    // ignore '\r'
     CMD_PARSE_FLAG = false;
     return;
   }
@@ -245,14 +246,14 @@ void uart_com::StringCmdParse(char c)
   // Start command parsing when line feed code is received
   if (c == '\n') {
     char CmdCpy[CMD_BUF_MAX];
-    strcpy(CmdCpy, CmdBuf);
+    snprintf(CmdCpy, sizeof(CmdCpy), CmdBuf);
 
-    //Split string by ','
-    char * str = strtok(CmdCpy, delim);
+    // Split string by ','
+    char * str = strtok(CmdCpy, delim);  // NOLINT
     while (str) {
       words[words_len] = str;
       words_len++;
-      str = strtok(NULL, delim);
+      str = strtok(NULL, delim);  // NOLINT
     }
 
     // Exit if there is no received character.
@@ -290,7 +291,7 @@ void uart_com::StringCmdParse(char c)
       this->parse_error();
     } else if (strcmp(words[0], "") == 0) {
     } else {
-      //other_func();nop just handle error if any.
+      // other_func();nop just handle error if any.
     }
 
     CmdBuf_wp = 0;
@@ -337,7 +338,7 @@ bool uart_com::set_mot(int right, int center, int left)
 bool uart_com::set_mot_r(int val)
 {
   if (100 >= val) {
-    //if (this->motor_r == val) return true;
+    // if (this->motor_r == val) return true;
     String buf = "R,";
     buf += String(val);
     UART.println(buf);
@@ -350,7 +351,7 @@ bool uart_com::set_mot_r(int val)
 bool uart_com::set_mot_c(int val)
 {
   if (100 >= val) {
-    //if (this->motor_c == val) return true;
+    // if (this->motor_c == val) return true;
     String buf = "C,";
     buf += String(val);
     UART.println(buf);
@@ -363,7 +364,7 @@ bool uart_com::set_mot_c(int val)
 bool uart_com::set_mot_l(int val)
 {
   if (100 >= val) {
-    //if (this->motor_l == val) return true;
+    // if (this->motor_l == val) return true;
     String buf = "L,";
     buf += String(val);
     UART.println(buf);
@@ -383,8 +384,8 @@ bool uart_com::set_thresh(int thresh)
   } else {
     return false;
   }
-
 }
+
 bool uart_com::set_sensi(int sensi)
 {
   switch (sensi) {
@@ -411,7 +412,7 @@ bool uart_com::is_started()
 
 bool uart_com::is_alive()
 {
-  unsigned long cur = millis();
+  uint32_t cur = millis();
   return (cur - this->_last_update_millis) < 1000;
 }
 

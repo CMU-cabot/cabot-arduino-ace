@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_VIBRATOR_CONTROLLER_H
-#define ARDUINO_NODE_VIBRATOR_CONTROLLER_H
+#ifndef VIBRATORCONTROLLER_H_
+#define VIBRATORCONTROLLER_H_
 
 #include <Wire.h>
 #include <std_msgs/UInt8.h>
@@ -30,11 +30,6 @@
 #include <analogWrite.h>
 #endif
 #include "uart_com.h"
-
-//#define VIB1_PIN (19)  //front
-//#define VIB2_PIN (20)   //back //not using
-//#define VIB3_PIN (18)  //left
-//#define VIB4_PIN (17)   //right
 
 class VibratorController : public SensorReader
 {
@@ -50,4 +45,4 @@ public:
   void update();
 };
 
-#endif //ARDUINO_NODE_VIBRATOR_CONTROLLER_H
+#endif  // VIBRATORCONTROLLER_H_

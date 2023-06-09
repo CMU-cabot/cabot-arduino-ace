@@ -57,13 +57,13 @@ void IMUReader::init(uint8_t * offsets)
   imu_.setAxisRemap(Adafruit_BNO055::REMAP_CONFIG_P6);
   imu_.setAxisSign(Adafruit_BNO055::REMAP_SIGN_P6);
 
-  imu_.setExtCrystalUse(true); // set crystal AFTER setting sensor parameters
+  imu_.setExtCrystalUse(true);  // set crystal AFTER setting sensor parameters
 
   // time 2 + orientation 4 + angular_velocy 3 + linear_acceleration 3
-  imu_msg_.data = (float *)malloc(sizeof(float) * 12);
+  imu_msg_.data = static_cast<float *>(malloc(sizeof(float) * 12));
   imu_msg_.data_length = 12;
 
-  calibration_msg_.data = (uint8_t *)malloc(sizeof(uint8_t) * 26);
+  calibration_msg_.data = static_cast<uint8_t *>(malloc(sizeof(uint8_t) * 26));
   calibration_msg_.data_length = 26;
 }
 
@@ -74,8 +74,8 @@ void IMUReader::update()
   }
   // put int32 as float32
   auto timestamp = nh_.now();
-  imu_msg_.data[0] = *((float *)(&timestamp.sec));
-  imu_msg_.data[1] = *((float *)(&timestamp.nsec));
+  imu_msg_.data[0] = *(static_cast<float *>(&timestamp.sec));
+  imu_msg_.data[1] = *(static_cast<float *>(&timestamp.nsec));
 
   imu::Quaternion q = imu_.getQuat();
 

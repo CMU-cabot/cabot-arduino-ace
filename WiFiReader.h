@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_WIFIREADER_H
-#define ARDUINO_NODE_WIFIREADER_H
+#ifndef WIFIREADER_H_
+#define WIFIREADER_H_
 
 #include "std_msgs/String.h"
 #include "WiFi.h"
@@ -66,12 +66,12 @@ class WiFiReader : public SensorReader
   bool verbose = DEFAULT_VERBOSITY;
 
   bool isScanning = false;
-  unsigned long scanningStart = 0;
+  uint32_t scanningStart = 0;
   int channel = 0;
   int skip[MAX_CHANNEL];
   int count[MAX_CHANNEL];
   int aps[MAX_CHANNEL];
-  unsigned long lastseen[MAX_CHANNEL];
+  uint32_t lastseen[MAX_CHANNEL];
   char buf[256];
 
   // BSSID=17, SSID=32, CH=2, RSSI=4, sec=10, nsec=10, commas=5, total 80 + margin 20
@@ -87,7 +87,7 @@ class WiFiReader : public SensorReader
   void checkZeroScan(int maximum);
 
 public:
-  WiFiReader(ros::NodeHandle & nh);
+  explicit WiFiReader(ros::NodeHandle & nh);
   void init(void (* callback)(char *));
   void init();
   void set_data(char * data);
@@ -95,4 +95,4 @@ public:
 };
 
 
-#endif //ARDUINO_NODE_WIFIREADER_H
+#endif  // WIFIREADER_H_

@@ -20,8 +20,8 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef ARDUINO_NODE_IMUREADER_H
-#define ARDUINO_NODE_IMUREADER_H
+#ifndef IMUREADER_H_
+#define IMUREADER_H_
 
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -40,7 +40,7 @@ class IMUReader : public SensorReader
   int in_calibration_;
 
 public:
-  IMUReader(ros::NodeHandle & nh);
+  explicit IMUReader(ros::NodeHandle & nh);
   void calibration();
   void init();
   void init(uint8_t * offsets);
@@ -49,4 +49,4 @@ public:
 };
 
 
-#endif //ARDUINO_NODE_IMUREADER_H
+#endif  // IMUREADER_H_
