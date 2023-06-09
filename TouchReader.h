@@ -28,7 +28,7 @@
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32.h>
 #include "SensorReader.h"
-#include "uart_com.h"
+#include "UartCom.h"
 
 class TouchReader : public SensorReader
 {
@@ -39,10 +39,10 @@ class TouchReader : public SensorReader
   std_msgs::Int16 touch_msg_;  // each of 12 channels are represented as 1 bit in message
   std_msgs::Int16 raw_msg_;
 
-  uart_com & cm;
+  UartCom & cm;
 
 public:
-  TouchReader(ros::NodeHandle & nh, uart_com & cm);
+  TouchReader(ros::NodeHandle & nh, UartCom & cm);
   void init();
   void init(uint8_t touch_baseline, uint8_t touch_threshold, uint8_t release_threshold);
   void update();

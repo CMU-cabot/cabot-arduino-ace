@@ -23,11 +23,11 @@
 #ifndef WIFIREADER_H_
 #define WIFIREADER_H_
 
-#include "std_msgs/String.h"
-#include "WiFi.h"
-#include "esp_wifi.h"
-#include <SPI.h>
 #include "SensorReader.h"
+#include <std_msgs/String.h>
+#include <WiFi.h>
+#include <esp_wifi.h>
+#include <SPI.h>
 
 // maximum number of channels
 #define MAX_CHANNEL (13)

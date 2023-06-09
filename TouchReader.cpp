@@ -22,7 +22,7 @@
 
 #include "TouchReader.h"
 
-TouchReader::TouchReader(ros::NodeHandle & nh, uart_com & cm)
+TouchReader::TouchReader(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
   cm(cm),
   touch_pub_("touch", &touch_msg_),

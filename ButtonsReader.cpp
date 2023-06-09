@@ -22,7 +22,7 @@
 
 #include "ButtonsReader.h"
 
-ButtonsReader::ButtonsReader(ros::NodeHandle & nh, uart_com & cm)
+ButtonsReader::ButtonsReader(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
   cm(cm),
   b_pub_("pushed", &b_msg_)

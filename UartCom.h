@@ -20,15 +20,16 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#ifndef UART_COM_H_
-#define UART_COM_H_
+#ifndef UARTCOM_H_
+#define UARTCOM_H_
 
 #include "SensorReader.h"
+#include <std_msgs/UInt32.h>
 
 #define CMD_BUF_MAX (128)
 #define MAX_LEN  64
 
-class uart_com : SensorReader
+class UartCom : SensorReader
 {
 private:
   // for parsing
@@ -70,7 +71,7 @@ public:
   int switch_right;
   int switch_center;
   int error_count;
-  explicit uart_com(ros::NodeHandle & nh);
+  explicit UartCom(ros::NodeHandle & nh);
   void init();
   void update();
   void begin(int baud_rate = 38400);
@@ -87,4 +88,4 @@ public:
   void publish();
 };
 
-#endif  // UART_COM_H_
+#endif  // UARTCOM_H_

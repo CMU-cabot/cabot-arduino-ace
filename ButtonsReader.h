@@ -26,16 +26,16 @@
 #include <Wire.h>
 #include <std_msgs/Int8.h>
 #include "SensorReader.h"
-#include "uart_com.h"
+#include "UartCom.h"
 
 class ButtonsReader : public SensorReader
 {
   ros::Publisher b_pub_;
   std_msgs::Int8 b_msg_;
-  uart_com & cm;
+  UartCom & cm;
 
 public:
-  ButtonsReader(ros::NodeHandle & nh, uart_com & cm);
+  ButtonsReader(ros::NodeHandle & nh, UartCom & cm);
   void init();
   void update();
 };

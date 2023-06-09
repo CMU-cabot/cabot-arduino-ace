@@ -29,7 +29,7 @@ int ff2percent(int ff)
   return static_cast<int>(static_cast<double>(ff * 100) / 255.0);
 }
 
-VibratorController::VibratorController(ros::NodeHandle & nh, uart_com & cm)
+VibratorController::VibratorController(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
   cm(cm),
   vib1_sub_("vibrator1", [](const std_msgs::UInt8 & msg) {

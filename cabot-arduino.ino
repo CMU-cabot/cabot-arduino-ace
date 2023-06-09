@@ -34,7 +34,7 @@
 #include "Arduino.h"
 #include <arduino-timer.h>
 
-#include "uart_com.h"
+#include "UartCom.h"
 #include "BarometerReader.h"
 #include "ButtonsReader.h"
 #include "Heartbeat.h"
@@ -79,7 +79,7 @@ Timer < 10 > timer;
 #define TOUCH_THRESHOLD_DEFAULT (64)
 #define RELEASE_THRESHOLD_DEFAULT (24)
 
-uart_com urt_cm(nh);
+UartCom urt_cm(nh);
 
 // sensors
 BarometerReader bmpReader(nh);

@@ -29,7 +29,7 @@
 #ifdef ESP32
 #include <analogWrite.h>
 #endif
-#include "uart_com.h"
+#include "UartCom.h"
 
 class VibratorController : public SensorReader
 {
@@ -37,10 +37,10 @@ class VibratorController : public SensorReader
   ros::Subscriber<std_msgs::UInt8> vib2_sub_;
   ros::Subscriber<std_msgs::UInt8> vib3_sub_;
   ros::Subscriber<std_msgs::UInt8> vib4_sub_;
-  uart_com & cm;
+  UartCom & cm;
 
 public:
-  VibratorController(ros::NodeHandle & nh, uart_com & cm);
+  VibratorController(ros::NodeHandle & nh, UartCom & cm);
   void init();
   void update();
 };

@@ -74,8 +74,8 @@ void IMUReader::update()
   }
   // put int32 as float32
   auto timestamp = nh_.now();
-  imu_msg_.data[0] = *(static_cast<float *>(&timestamp.sec));
-  imu_msg_.data[1] = *(static_cast<float *>(&timestamp.nsec));
+  imu_msg_.data[0] = *(static_cast<float *>(static_cast<void *>(&timestamp.sec)));
+  imu_msg_.data[1] = *(static_cast<float *>(static_cast<void *>(&timestamp.nsec)));
 
   imu::Quaternion q = imu_.getQuat();
 

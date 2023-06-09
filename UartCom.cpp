@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  *******************************************************************************/
 
-#include "uart_com.h"
+#include "UartCom.h"
 #include <Arduino.h>
 #include <stdlib.h>
 
@@ -50,19 +50,19 @@ uint16_t DecStringToDec(char * str)
   }
 }
 
-uart_com::uart_com(ros::NodeHandle & nh)
+UartCom::UartCom(ros::NodeHandle & nh)
 : SensorReader(nh),
   error_pub_("error_count", &error_msg_)
 {
   nh.advertise(error_pub_);
 }
 
-void uart_com::begin(int baud_rate)
+void UartCom::begin(int baud_rate)
 {
   UART.begin(baud_rate);
 }
 
-bool uart_com::parse_mot()
+bool UartCom::parse_mot()
 {
   if (4 == words_len &&
     IsDecString(words[1]) &&
@@ -78,7 +78,7 @@ bool uart_com::parse_mot()
   }
 }
 
-bool uart_com::parse_mot_r()
+bool UartCom::parse_mot_r()
 {
   if (2 == words_len &&
     IsDecString(words[1]))
@@ -90,7 +90,7 @@ bool uart_com::parse_mot_r()
   }
 }
 
-bool uart_com::parse_mot_c()
+bool UartCom::parse_mot_c()
 {
   if (2 == words_len &&
     IsDecString(words[1]))
@@ -102,7 +102,7 @@ bool uart_com::parse_mot_c()
   }
 }
 
-bool uart_com::parse_mot_l()
+bool UartCom::parse_mot_l()
 {
   if (2 == words_len &&
     IsDecString(words[1]))
@@ -114,7 +114,7 @@ bool uart_com::parse_mot_l()
   }
 }
 
-bool uart_com::parse_thresh()
+bool UartCom::parse_thresh()
 {
   if (2 == words_len &&
     IsDecString(words[1]))
@@ -125,7 +125,7 @@ bool uart_com::parse_thresh()
     return false;
   }
 }
-bool uart_com::parse_sensi()
+bool UartCom::parse_sensi()
 {
   if (2 == words_len &&
     IsDecString(words[1]))
@@ -137,7 +137,7 @@ bool uart_com::parse_sensi()
   }
 }
 
-bool uart_com::parse_dat()
+bool UartCom::parse_dat()
 {
   if (words_len != 12) {return false;}
   if (!IsDecString(words[1])) {return false;}
@@ -167,7 +167,7 @@ bool uart_com::parse_dat()
   return true;
 }
 
-bool uart_com::parse_dat_short()
+bool UartCom::parse_dat_short()
 {
   if (words_len != 8) {return false;}
   if (!IsDecString(words[1])) {return false;}
@@ -189,7 +189,7 @@ bool uart_com::parse_dat_short()
   return true;
 }
 
-bool uart_com::parse_dat_shortest()
+bool UartCom::parse_dat_shortest()
 {
   if (words_len != 3) {return false;}
   if (!IsDecString(words[1])) {return false;}
@@ -207,7 +207,7 @@ bool uart_com::parse_dat_shortest()
   return true;
 }
 
-bool uart_com::parse_error()
+bool UartCom::parse_error()
 {
   if (words_len != 2) {return false;}
   if (!IsDecString(words[1])) {return false;}
@@ -218,7 +218,7 @@ bool uart_com::parse_error()
     ((code >> 1) % 2 * 100) + code % 2;
 }
 
-void uart_com::StringCmdParse(char c)
+void UartCom::StringCmdParse(char c)
 {
   CMD_PARSE_FLAG = true;
 
@@ -300,11 +300,11 @@ void uart_com::StringCmdParse(char c)
   CMD_PARSE_FLAG = false;
 }
 
-void uart_com::init()
+void UartCom::init()
 {
 }
 
-void uart_com::update()
+void UartCom::update()
 {
   while (UART.available()) {
     char c = UART.read();
@@ -312,16 +312,16 @@ void uart_com::update()
   }
 }
 
-void uart_com::start()
+void UartCom::start()
 {
   UART.println("start");
 }
-void uart_com::stop()
+void UartCom::stop()
 {
   UART.println("stop");
 }
 
-bool uart_com::set_mot(int right, int center, int left)
+bool UartCom::set_mot(int right, int center, int left)
 {
   if (100 >= right && 100 >= center && 100 >= left) {
     String buf = "MOT,";
@@ -335,7 +335,7 @@ bool uart_com::set_mot(int right, int center, int left)
   }
 }
 
-bool uart_com::set_mot_r(int val)
+bool UartCom::set_mot_r(int val)
 {
   if (100 >= val) {
     // if (this->motor_r == val) return true;
@@ -348,7 +348,7 @@ bool uart_com::set_mot_r(int val)
   }
 }
 
-bool uart_com::set_mot_c(int val)
+bool UartCom::set_mot_c(int val)
 {
   if (100 >= val) {
     // if (this->motor_c == val) return true;
@@ -361,7 +361,7 @@ bool uart_com::set_mot_c(int val)
   }
 }
 
-bool uart_com::set_mot_l(int val)
+bool UartCom::set_mot_l(int val)
 {
   if (100 >= val) {
     // if (this->motor_l == val) return true;
@@ -374,7 +374,7 @@ bool uart_com::set_mot_l(int val)
   }
 }
 
-bool uart_com::set_thresh(int thresh)
+bool UartCom::set_thresh(int thresh)
 {
   if (127 >= thresh) {
     String buf = "THRESH,";
@@ -386,7 +386,7 @@ bool uart_com::set_thresh(int thresh)
   }
 }
 
-bool uart_com::set_sensi(int sensi)
+bool UartCom::set_sensi(int sensi)
 {
   switch (sensi) {
     case 1: break;
@@ -405,18 +405,18 @@ bool uart_com::set_sensi(int sensi)
   return true;
 }
 
-bool uart_com::is_started()
+bool UartCom::is_started()
 {
   return this->_started;
 }
 
-bool uart_com::is_alive()
+bool UartCom::is_alive()
 {
   uint32_t cur = millis();
   return (cur - this->_last_update_millis) < 1000;
 }
 
-void uart_com::publish()
+void UartCom::publish()
 {
   error_msg_.data = error_count;
   error_pub_.publish(&error_msg_);
