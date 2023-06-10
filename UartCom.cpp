@@ -216,6 +216,8 @@ bool UartCom::parse_error()
   // ORE, NE, FE, PE
   this->error_count += ((code >> 3) % 2 * 1000000) + ((code >> 2) % 2 * 10000) +
     ((code >> 1) % 2 * 100) + code % 2;
+
+  return true;
 }
 
 void UartCom::StringCmdParse(char c)
@@ -257,7 +259,7 @@ void UartCom::StringCmdParse(char c)
     }
 
     // Exit if there is no received character.
-    if (words_len == 0) {words[0] = "";}
+    if (words_len == 0) {words[0][0] = '\0';}
 
     if (strcmp(words[0], "DAT") == 0) {
       if (this->parse_dat()) {

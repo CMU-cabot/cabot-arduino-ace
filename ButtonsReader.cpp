@@ -24,8 +24,8 @@
 
 ButtonsReader::ButtonsReader(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
-  cm(cm),
-  b_pub_("pushed", &b_msg_)
+  b_pub_("pushed", &b_msg_),
+  cm(cm)
 {
   nh.advertise(b_pub_);
 }

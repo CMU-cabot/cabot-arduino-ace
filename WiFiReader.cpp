@@ -115,7 +115,7 @@ void WiFiReader::handleScan()
       //                      bool passive = false,
       //                      uint32_t max_ms_per_chan = 300,
       //                      uint8_t channel = 0);
-      int n = WiFi.scanNetworks(true, false, false, scan_duration, channel + 1);
+      WiFi.scanNetworks(true, false, false, scan_duration, channel + 1);
       scanningStart = millis();
       count[channel] = 0;
       isScanning = true;
@@ -133,7 +133,7 @@ void WiFiReader::handleScan()
       showScanStatus();
       if (verbose) {
         snprintf(
-          buf, sizeof(buf), "[ch:%2d][%3dAPs][skip:%2d/%2d]%3dms,%5dms",
+          buf, sizeof(buf), "[ch:%2d][%3dAPs][skip:%2d/%2d]%3lums,%5lums",
           channel + 1, n, skip[channel], max_skip,
           millis() - scanningStart, millis() - lastseen[channel]);
         // nh_.loginfo(buf);

@@ -31,27 +31,11 @@ int ff2percent(int ff)
 
 VibratorController::VibratorController(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
-  cm(cm),
-  vib1_sub_("vibrator1", [](const std_msgs::UInt8 & msg) {
-      inst->nh_.loginfo("setting vibrator1");
-      String buf = "setting vibfrator1,";
-      buf += String(msg.data);
-      buf += ",";
-      buf += String(inst->cm.motor_r);
-      buf += ",";
-      buf += String(inst->cm.motor_c);
-      buf += ",";
-      buf += String(inst->cm.motor_l);
-      inst->nh_.loginfo(buf.c_str());
-      inst->cm.set_mot_c(ff2percent(msg.data));
-    }),
+  vib1_sub_("vibrator1", [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_c(ff2percent(msg.data));}),
   vib2_sub_("vibrator2", [](const std_msgs::UInt8 & msg) { /*nop: not supported*/}),
-  vib3_sub_(
-    "vibrator3",
-    [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_l(ff2percent(msg.data));}),
-  vib4_sub_(
-    "vibrator4",
-    [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_r(ff2percent(msg.data));})
+  vib3_sub_("vibrator3", [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_l(ff2percent(msg.data));}),
+  vib4_sub_("vibrator4", [](const std_msgs::UInt8 & msg) {inst->cm.set_mot_r(ff2percent(msg.data));}),
+  cm(cm)
 {
   inst = this;
   nh.subscribe(vib1_sub_);

@@ -37,7 +37,7 @@ private:
   int CmdBuf_wp = 0;  // Number of stored in command buffer
   char * words[MAX_LEN];
   int words_len = 0;
-  char * delim = ",";
+  char delim[2] = ",";
   bool CMD_PARSE_FLAG = false;
   bool StartFlg = false;
 

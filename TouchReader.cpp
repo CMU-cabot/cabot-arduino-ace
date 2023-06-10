@@ -24,9 +24,9 @@
 
 TouchReader::TouchReader(ros::NodeHandle & nh, UartCom & cm)
 : SensorReader(nh),
-  cm(cm),
   touch_pub_("touch", &touch_msg_),
-  raw_pub_("touch_raw", &raw_msg_)
+  raw_pub_("touch_raw", &raw_msg_),
+  cm(cm)
 {
   nh.advertise(touch_pub_);
   nh.advertise(raw_pub_);
