@@ -98,6 +98,9 @@ void setup()
   // set baud rate
   ch.setBaudRate(BAUDRATE);
   urt_cm.begin(19200);
+  // set pull up for urt_cm (Serial2)
+  gpio_set_pull_mode(GPIO_NUM_16, GPIO_PULLUP_ONLY); // ESP32 U2RX
+  gpio_set_pull_mode(GPIO_NUM_17, GPIO_PULLUP_ONLY); // ESP32 U2TX
 
   // connect to rosserial
   ch.init();
