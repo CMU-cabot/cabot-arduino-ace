@@ -41,6 +41,7 @@
 #include "IMUReader.hpp"
 #include "WiFiReader.hpp"
 #include "TouchReader.hpp"
+#include "ESP32TouchReader.hpp"
 #include "VibratorController.hpp"
 
 cabot::Handle ch;
@@ -88,6 +89,7 @@ ButtonsReader buttonsReader(ch, urt_cm);
 IMUReader imuReader(ch);
 WiFiReader wifiReader(ch);
 TouchReader touchReader(ch, urt_cm);
+ESP32TouchReader esp32TouchReader(ch);
 
 // controllers
 VibratorController vibratorController(ch, urt_cm);
@@ -192,8 +194,8 @@ void setup()
   buttonsReader.init();
   ch.loginfo("setting up BNO055");
   imuReader.init(offsets);
-  ch.loginfo("setting up MPR121");
-  touchReader.init(touch_baseline, touch_threshold, release_threshold);
+  ch.loginfo("setting up ESP32 touch reader");
+  esp32TouchReader.init(touch_baseline, touch_threshold, release_threshold);
   ch.loginfo("setting up vibrations");
   vibratorController.init();
   ch.loginfo("setting up heartbeat");
@@ -213,7 +215,7 @@ void setup()
     500, [] (void *) {
     bmpReader.update();
     urt_cm.publish();
-    touchReader.diag_pub();
+    esp32TouchReader.diag_pub();
     return true;
   });
 
@@ -221,7 +223,7 @@ void setup()
     20, [] (void *) {
     //heartbeat.update();
     buttonsReader.update();
-    touchReader.update();
+    esp32TouchReader.update();
     return true;
   });
 
