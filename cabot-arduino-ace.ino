@@ -186,13 +186,13 @@ void setup()
   // initialize
   ch.loginfo("starting uart com");
   urt_cm.start();
-  ch.loginfo("setting up BMP280");
+  ch.loginfo("setting up BME280");
   bmpReader.init();
   ch.loginfo("setting up Buttons");
   buttonsReader.init();
   ch.loginfo("setting up BNO055");
   imuReader.init(offsets);
-  ch.loginfo("setting up MPR121");
+  ch.loginfo("setting up touch sensor");
   touchReader.init(touch_baseline, touch_threshold, release_threshold);
   ch.loginfo("setting up vibrations");
   vibratorController.init();
