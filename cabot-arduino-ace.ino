@@ -95,6 +95,7 @@ Heartbeat heartbeat(LED_BUILTIN, HEARTBEAT_DELAY);
 
 void setup()
 {
+  delay(1000);
   // set baud rate
   ch.setBaudRate(BAUDRATE);
   urt_cm.begin(19200);
