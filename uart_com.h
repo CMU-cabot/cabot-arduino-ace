@@ -64,6 +64,7 @@ public:
   int switch_left;
   int switch_right;
   int switch_center;
+  int servo_position;
   int error_count;
   explicit uart_com(cabot::Handle & ch);
   void init();

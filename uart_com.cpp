@@ -134,7 +134,7 @@ bool uart_com::parse_sensi()
 
 bool uart_com::parse_dat()
 {
-  if (words_len != 12) {return false;}
+  if (words_len != 13) {return false;}
   if (!IsDecString(words[1])) {return false;}
   if (!IsDecString(words[2])) {return false;}
   if (!IsDecString(words[3])) {return false;}
@@ -146,6 +146,7 @@ bool uart_com::parse_dat()
   if (!IsDecString(words[9])) {return false;}
   if (!IsDecString(words[10])) {return false;}
   if (!IsDecString(words[11])) {return false;}
+  if (!IsDecString(words[12])) {return false;}
 
   this->touch = DecStringToDec(words[1]);
   this->capacitance = DecStringToDec(words[2]);
@@ -158,13 +159,14 @@ bool uart_com::parse_dat()
   this->switch_left = DecStringToDec(words[9]);
   this->switch_right = DecStringToDec(words[10]);
   this->switch_center = DecStringToDec(words[11]);
+  this->servo_position = DecStringToDec(words[12]);
 
   return true;
 }
 
 bool uart_com::parse_dat_short()
 {
-  if (words_len != 8) {return false;}
+  if (words_len != 9) {return false;}
   if (!IsDecString(words[1])) {return false;}
   if (!IsDecString(words[2])) {return false;}
   if (!IsDecString(words[3])) {return false;}
@@ -172,6 +174,7 @@ bool uart_com::parse_dat_short()
   if (!IsDecString(words[5])) {return false;}
   if (!IsDecString(words[6])) {return false;}
   if (!IsDecString(words[7])) {return false;}
+  if (!IsDecString(words[8])) {return false;}
 
   this->touch = DecStringToDec(words[1]);
   this->capacitance = DecStringToDec(words[2]);
@@ -180,6 +183,7 @@ bool uart_com::parse_dat_short()
   this->switch_left = DecStringToDec(words[5]);
   this->switch_right = DecStringToDec(words[6]);
   this->switch_center = DecStringToDec(words[7]);
+  this->servo_position = DecStringToDec(words[8]);
 
   return true;
 }
@@ -198,6 +202,7 @@ bool uart_com::parse_dat_shortest()
   this->switch_left = (code >> 2) % 2;
   this->switch_right = (code >> 1) % 2;
   this->switch_center = (code >> 0) % 2;
+  // this->servo_position = // not implemented
 
   return true;
 }
