@@ -42,6 +42,7 @@
 #include "WiFiReader.hpp"
 #include "TouchReader.hpp"
 #include "VibratorController.hpp"
+#include "ServoController.hpp"
 
 cabot::Handle ch;
 Timer < 10 > timer;
@@ -91,6 +92,7 @@ TouchReader touchReader(ch, urt_cm);
 
 // controllers
 VibratorController vibratorController(ch, urt_cm);
+ServoController servoController(ch, urt_cm);
 Heartbeat heartbeat(LED_BUILTIN, HEARTBEAT_DELAY);
 
 void setup()
@@ -197,6 +199,8 @@ void setup()
   touchReader.init(touch_baseline, touch_threshold, release_threshold);
   ch.loginfo("setting up vibrations");
   vibratorController.init();
+  ch.loginfo("setting up servo motor");
+  servoController.init();
   ch.loginfo("setting up heartbeat");
   heartbeat.init();
 
@@ -223,6 +227,7 @@ void setup()
     //heartbeat.update();
     buttonsReader.update();
     touchReader.update();
+    servoController.update();
     return true;
   });
 

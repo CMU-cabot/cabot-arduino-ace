@@ -399,11 +399,24 @@ bool uart_com::set_sensi(int sensi)
     case 64: break;
     case 128: break;
     default: return false;
+  return true;
   }
   String buf = "SENSI,";
   buf += String(sensi);
   UART.println(buf);
   return true;
+}
+
+bool uart_com::set_servo_pos(int pos)
+{
+  if (135 >= pos && pos >= -135) {
+    String buf = "SERVO,";
+    buf += String(pos);
+    UART.println(buf);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 bool uart_com::is_started()

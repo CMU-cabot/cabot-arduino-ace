@@ -80,6 +80,7 @@ public:
   bool set_mot_l(int val);
   bool set_thresh(int thresh);
   bool set_sensi(int sensi);
+  bool set_servo_pos(int pos);
   void publish();
 };
 
