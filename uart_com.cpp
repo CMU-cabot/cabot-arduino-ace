@@ -326,6 +326,7 @@ bool uart_com::set_mot(int right, int center, int left)
     buf += String(center) + ",";
     buf += String(left);
     UART.println(buf);
+    send_feedback(right, center, left);
     return true;
   } else {
     return false;
@@ -339,6 +340,7 @@ bool uart_com::set_mot_r(int val)
     String buf = "R,";
     buf += String(val);
     UART.println(buf);
+    send_feedback(val, this->motor_c, this->motor_l);
     return true;
   } else {
     return false;
@@ -352,6 +354,7 @@ bool uart_com::set_mot_c(int val)
     String buf = "C,";
     buf += String(val);
     UART.println(buf);
+    send_feedback(this->motor_r, val, this->motor_l);
     return true;
   } else {
     return false;
@@ -365,6 +368,7 @@ bool uart_com::set_mot_l(int val)
     String buf = "L,";
     buf += String(val);
     UART.println(buf);
+    send_feedback(this->motor_r, this->motor_l, val);
     return true;
   } else {
     return false;
@@ -415,3 +419,22 @@ bool uart_com::is_alive()
 void uart_com::publish()
 {
 }
+
+void uart_com::send_feedback(int motor_r, int motor_c, int motor_l)
+{
+  this->current_motor_r = motor_r;
+  this->current_motor_c = motor_c;
+  this->current_motor_l = motor_l;
+}
+
+bool uart_com::check_feedback(int &motor_r, int &motor_c, int &motor_l)
+{
+  if(this->motor_r != motor_r || this->motor_c != motor_c || this->motor_l != motor_l){
+    motor_r = this->motor_r;
+    motor_c = this->motor_c;
+    motor_l = this->motor_l;
+    return false;
+  }
+  return true;
+}
+
