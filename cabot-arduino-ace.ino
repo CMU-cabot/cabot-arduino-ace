@@ -243,10 +243,6 @@ void loop()
 {
   timer.tick < void > ();
   urt_cm.update();
-  int motor_r, motor_c, motor_l;
-  if(!uart.check_feedback(motor_r, motor_c, motor_l)){
-    uart.set_mot(motor_r, motor_c, motor_l);
-  }
   ch.spinOnce();
 }
 

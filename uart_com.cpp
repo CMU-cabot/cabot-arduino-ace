@@ -351,6 +351,16 @@ bool uart_com::set_mot_c(int val)
 {
   if (100 >= val) {
     // if (this->motor_c == val) return true;
+    /* To check for bug that keep vibrating
+    if(val < last_motor_c){
+      dearease_count++;
+    }
+    last_motor_c = val;
+    if(dearease_count >= 5){
+      dearease_count = 0;
+      return false;
+    }
+    */
     String buf = "C,";
     buf += String(val);
     UART.println(buf);

@@ -62,6 +62,8 @@ public:
   int current_motor_r;
   int current_motor_c;
   int current_motor_l;
+  // int last_motor_c;  // To check for bug
+  // int dearease_count;  // that keep vibrating
   int switch_up;
   int switch_down;
   int switch_left;
