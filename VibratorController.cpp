@@ -62,30 +62,20 @@ void VibratorController::init()
 
 void VibratorController::update()
 {
-for(int i = 0; i < 4; i++){
-  if(vibrations[i] > 0){
-    if(vibrations[i] == 1){
-      vibrations[i] = 0;
-      bool success = false;
-        if(i == 0){
-          success = cm.set_mot_c(0);
-        }else if(i == 2){
-          success = cm.set_mot_l(0);
-        }else if(i == 3){
-          success = cm.set_mot_r(0);
-        }
-	if(!success){
-          int motor_r, motor_c, motor_l;
-          if(!cm.check_feedback(motor_r, motor_c, motor_l)){
-            if(i == 0){
-              cm.set_mot_c(0);
-            }else if (i == 2){
-              cm.set_mot_l(0);
-            }else if (i == 3){
-              cm.set_mot_r(0);
-            }
+  for(int i = 0; i < 4; i++){
+    if(vibrations[i] > 0){
+      if(vibrations[i] == 1){
+        vibrations[i] = 0;
+        int motor_r, motor_c, motor_l;
+        do{
+          if(i == 0){
+            cm.set_mot_c(0);
+          }else if(i == 2){
+            cm.set_mot_l(0);
+          }else if(i == 3){
+            cm.set_mot_r(0);
           }
-        }
+        }while(!cm.check_feedback(motor_r, motor_c, motor_l));
       }else{
         vibrations[i]--;
         if(i == 0){
