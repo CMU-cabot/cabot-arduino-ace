@@ -66,24 +66,65 @@ void VibratorController::update()
     if(vibrations[i] > 0){
       if(vibrations[i] == 1){
         vibrations[i] = 0;
-        int motor_r, motor_c, motor_l;
-        do{
-          if(i == 0){
-            cm.set_mot_c(0);
-          }else if(i == 2){
-            cm.set_mot_l(0);
-          }else if(i == 3){
-            cm.set_mot_r(0);
-          }
-        }while(!cm.check_feedback(motor_r, motor_c, motor_l));
+        if(i == 0){
+          cm.set_mot_c(0);
+        }else if(i == 2){
+          cm.set_mot_l(0);
+        }else if(i == 3){
+          cm.set_mot_r(0);
+        }
       }else{
         vibrations[i]--;
         if(i == 0){
-          cm.set_mot_c(100);
+          cm.set_mot_c(80);
         }else if(i == 2){
-          cm.set_mot_l(100);
+          cm.set_mot_l(80);
         }else if(i == 3){
-          cm.set_mot_r(100);
+          cm.set_mot_r(80);
+        }
+      }
+    }
+  }
+  if(!cm.check_feedback()){
+    for(int i =0; i < 4; i++){
+      if(i == 0 && cm.motor_c != cm.current_motor_c){
+        int retry = 0;
+        String logmsg = String(cm.motor_c) + "is mismatch, current_motor_c is " + String(cm.current_motor_c);
+        ch_.loginfo(logmsg.c_str());
+        while(!cm.check_feedback()){
+          cm.set_mot_c(cm.current_motor_c);
+          retry++;
+          if(retry > 10){
+            String logmsg = "failed to resend current_motor_c is " + String(cm.current_motor_c);
+            ch_.loginfo(logmsg.c_str());
+            break;
+          }
+        }
+      }else if(i == 2 && cm.motor_l != cm.current_motor_l){
+        int retry = 0;
+        String logmsg = String(cm.motor_l) + "is mismatch, current_motor_l is " + String(cm.current_motor_l);
+        ch_.loginfo(logmsg.c_str());
+        while(!cm.check_feedback()){
+          cm.set_mot_l(cm.current_motor_l);
+          retry++;
+          if(retry > 10){
+            String logmsg = "failed to resend current_motor_l is " + String(cm.current_motor_l);
+            ch_.loginfo(logmsg.c_str());
+            break;
+          }
+        }
+      }else if(i == 3 && cm.motor_r != cm.current_motor_r){
+        int retry = 0;
+        String logmsg = String(cm.motor_r) + "is mismatch, current_motor_r is " + String(cm.current_motor_r);
+        ch_.loginfo(logmsg.c_str());
+        while(!cm.check_feedback()){
+          cm.set_mot_r(cm.current_motor_r);
+          retry++;
+          if(retry > 10){
+            String logmsg = "failed to resend current_motor_r is " + String(cm.current_motor_r);
+            ch_.loginfo(logmsg.c_str());
+            break;
+          }
         }
       }
     }

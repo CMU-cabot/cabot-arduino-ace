@@ -62,8 +62,6 @@ public:
   int current_motor_r;
   int current_motor_c;
   int current_motor_l;
-  // int last_motor_c;  // To check for bug
-  // int dearease_count;  // that keep vibrating
   int switch_up;
   int switch_down;
   int switch_left;
@@ -85,8 +83,7 @@ public:
   bool set_thresh(int thresh);
   bool set_sensi(int sensi);
   void publish();
-  void send_feedback(int motor_r, int motor_c, int motor_l);
-  bool check_feedback(int &motor_r, int &motor_c, int &motor_l);
+  bool check_feedback();
 };
 
 #endif  // UART_COM_H_

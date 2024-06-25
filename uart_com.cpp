@@ -22,6 +22,8 @@
 #include "uart_com.h"  // NOLINT
 #include "Arduino.h"
 #include "stdlib.h"  // NOLINT
+#include "ctime"
+#include "cstdlib"
 
 #define UART Serial2
 
@@ -50,7 +52,9 @@ int16_t DecStringToDec(char * str)
 }
 
 uart_com::uart_com(cabot::Handle & ch)
-: SensorReader(ch) {}
+: SensorReader(ch) {
+  srand(time(NULL)); // random seed initialize
+}
 
 void uart_com::begin(int baud_rate)
 {
@@ -79,6 +83,7 @@ bool uart_com::parse_mot_r()
     IsDecString(words[1]))
   {
     this->motor_r = DecStringToDec(words[1]);
+    this->current_motor_r = this->motor_r;
     return true;
   } else {
     return false;
@@ -91,6 +96,7 @@ bool uart_com::parse_mot_c()
     IsDecString(words[1]))
   {
     this->motor_c = DecStringToDec(words[1]);
+    this->current_motor_c = this->motor_c;
     return true;
   } else {
     return false;
@@ -103,6 +109,7 @@ bool uart_com::parse_mot_l()
     IsDecString(words[1]))
   {
     this->motor_l = DecStringToDec(words[1]);
+    this->current_motor_l = this->motor_l;
     return true;
   } else {
     return false;
@@ -158,6 +165,10 @@ bool uart_com::parse_dat()
   this->switch_left = DecStringToDec(words[9]);
   this->switch_right = DecStringToDec(words[10]);
   this->switch_center = DecStringToDec(words[11]);
+
+  this->current_motor_r = this->motor_r;
+  this->current_motor_c = this->motor_c;
+  this->current_motor_l = this->motor_l;
 
   return true;
 }
@@ -326,7 +337,6 @@ bool uart_com::set_mot(int right, int center, int left)
     buf += String(center) + ",";
     buf += String(left);
     UART.println(buf);
-    send_feedback(right, center, left);
     return true;
   } else {
     return false;
@@ -337,10 +347,11 @@ bool uart_com::set_mot_r(int val)
 {
   if (100 >= val) {
     // if (this->motor_r == val) return true;
-    String buf = "R,";
-    buf += String(val);
-    UART.println(buf);
-    send_feedback(val, this->motor_c, this->motor_l);
+    if(rand() %  10 == 0){
+      String buf = "R,";
+      buf += String(val);
+      UART.println(buf);
+    }
     return true;
   } else {
     return false;
@@ -351,20 +362,11 @@ bool uart_com::set_mot_c(int val)
 {
   if (100 >= val) {
     // if (this->motor_c == val) return true;
-    /* To check for bug that keep vibrating
-    if(val < last_motor_c){
-      dearease_count++;
+    if(rand() %  10 == 0){
+      String buf = "C,";
+      buf += String(val);
+      UART.println(buf);
     }
-    last_motor_c = val;
-    if(dearease_count >= 5){
-      dearease_count = 0;
-      return false;
-    }
-    */
-    String buf = "C,";
-    buf += String(val);
-    UART.println(buf);
-    send_feedback(this->motor_r, val, this->motor_l);
     return true;
   } else {
     return false;
@@ -375,10 +377,11 @@ bool uart_com::set_mot_l(int val)
 {
   if (100 >= val) {
     // if (this->motor_l == val) return true;
-    String buf = "L,";
-    buf += String(val);
-    UART.println(buf);
-    send_feedback(this->motor_r, this->motor_l, val);
+    if(rand() %  10 == 0){
+      String buf = "L,";
+      buf += String(val);
+      UART.println(buf);
+    }
     return true;
   } else {
     return false;
@@ -430,19 +433,9 @@ void uart_com::publish()
 {
 }
 
-void uart_com::send_feedback(int motor_r, int motor_c, int motor_l)
+bool uart_com::check_feedback()
 {
-  this->current_motor_r = motor_r;
-  this->current_motor_c = motor_c;
-  this->current_motor_l = motor_l;
-}
-
-bool uart_com::check_feedback(int &motor_r, int &motor_c, int &motor_l)
-{
-  if(this->motor_r != motor_r || this->motor_c != motor_c || this->motor_l != motor_l){
-    motor_r = this->motor_r;
-    motor_c = this->motor_c;
-    motor_l = this->motor_l;
+  if(this->current_motor_r != this->motor_r || this->current_motor_c != this->motor_c || this->current_motor_l != this->motor_l){
     return false;
   }
   return true;
