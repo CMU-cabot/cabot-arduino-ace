@@ -59,9 +59,10 @@ public:
   int motor_r;
   int motor_c;
   int motor_l;
-  int current_motor_r;
-  int current_motor_c;
-  int current_motor_l;
+  int expected_motor_r;
+  int expected_motor_c;
+  int expected_motor_l;
+  int resync;
   int switch_up;
   int switch_down;
   int switch_left;

@@ -52,7 +52,7 @@ int16_t DecStringToDec(char * str)
 }
 
 uart_com::uart_com(cabot::Handle & ch)
-: SensorReader(ch) {
+: SensorReader(ch) ,resync(0) {
   srand(time(NULL)); // random seed initialize
 }
 
@@ -83,7 +83,6 @@ bool uart_com::parse_mot_r()
     IsDecString(words[1]))
   {
     this->motor_r = DecStringToDec(words[1]);
-    this->current_motor_r = this->motor_r;
     return true;
   } else {
     return false;
@@ -96,7 +95,6 @@ bool uart_com::parse_mot_c()
     IsDecString(words[1]))
   {
     this->motor_c = DecStringToDec(words[1]);
-    this->current_motor_c = this->motor_c;
     return true;
   } else {
     return false;
@@ -109,7 +107,6 @@ bool uart_com::parse_mot_l()
     IsDecString(words[1]))
   {
     this->motor_l = DecStringToDec(words[1]);
-    this->current_motor_l = this->motor_l;
     return true;
   } else {
     return false;
@@ -165,11 +162,6 @@ bool uart_com::parse_dat()
   this->switch_left = DecStringToDec(words[9]);
   this->switch_right = DecStringToDec(words[10]);
   this->switch_center = DecStringToDec(words[11]);
-
-  this->current_motor_r = this->motor_r;
-  this->current_motor_c = this->motor_c;
-  this->current_motor_l = this->motor_l;
-
   return true;
 }
 
@@ -318,6 +310,14 @@ void uart_com::update()
     char c = UART.read();
     this->StringCmdParse(c);
   }
+  if(!check_feedback()){
+    resync++;
+    String logmsg = "expected motor (" + String(motor_c) + " != " + String(expected_motor_c) + ") [count=" + String(resync) + "]";
+    ch_.loginfo(logmsg.c_str());
+    set_mot_c(expected_motor_c);
+  }else{
+  resync = 0;
+  }
 }
 
 void uart_com::start()
@@ -435,7 +435,7 @@ void uart_com::publish()
 
 bool uart_com::check_feedback()
 {
-  if(this->current_motor_r != this->motor_r || this->current_motor_c != this->motor_c || this->current_motor_l != this->motor_l){
+  if(motor_r != expected_motor_r || motor_c != expected_motor_c || motor_l != expected_motor_l){
     return false;
   }
   return true;
