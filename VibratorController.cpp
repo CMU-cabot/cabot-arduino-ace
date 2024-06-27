@@ -67,26 +67,20 @@ void VibratorController::update()
       if(vibrations[i] == 1){
         vibrations[i] = 0;
         if(i == 0){
-          cm.expected_motor_c = 0;
-          cm.set_mot_c(cm.expected_motor_c);
+          cm.set_mot_c(0);
         }else if(i == 2){
-          cm.expected_motor_l = 0;
-          cm.set_mot_l(cm.expected_motor_l);
+          cm.set_mot_l(0);
         }else if(i == 3){
-          cm.expected_motor_r = 0;
-          cm.set_mot_r(cm.expected_motor_r);
+          cm.set_mot_r(0);
         }
       }else{
         vibrations[i]--;
         if(i == 0){
-          cm.expected_motor_c = 100;
-          cm.set_mot_c(cm.expected_motor_c);
+          cm.set_mot_c(100);
         }else if(i == 2){
-          cm.expected_motor_l = 100;
-          cm.set_mot_l(cm.expected_motor_l);
+          cm.set_mot_l(100);
         }else if(i == 3){
-          cm.expected_motor_r = 100;
-          cm.set_mot_r(cm.expected_motor_r);
+          cm.set_mot_r(100);
         }
       }
     }
