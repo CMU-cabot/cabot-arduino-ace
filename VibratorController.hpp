@@ -37,9 +37,6 @@ public:
   VibratorController(cabot::Handle & ch, uart_com & cm);
   void init() override;
   void update() override;
-  int current_motor_r;
-  int current_motor_c;
-  int current_motor_l;
 };
 
 #endif  // VIBRATORCONTROLLER_HPP_

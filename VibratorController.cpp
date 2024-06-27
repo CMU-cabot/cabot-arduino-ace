@@ -31,10 +31,7 @@ int ff2percent(int ff)
 
 VibratorController::VibratorController(cabot::Handle & ch, uart_com & cm)
 : SensorReader(ch),
-  cm(cm),
-  current_motor_r(0),
-  current_motor_c(0),
-  current_motor_l(0)
+  cm(cm)
 {
   inst = this;
   ch.subscribe(
@@ -70,26 +67,26 @@ void VibratorController::update()
       if(vibrations[i] == 1){
         vibrations[i] = 0;
         if(i == 0){
-          cm.set_mot_c(0);
-          current_motor_c = 0;
+          cm.expected_motor_c = 0;
+          cm.set_mot_c(cm.expected_motor_c);
         }else if(i == 2){
-          cm.set_mot_l(0);
-          current_motor_l = 0;
+          cm.expected_motor_l = 0;
+          cm.set_mot_l(cm.expected_motor_l);
         }else if(i == 3){
-          cm.set_mot_r(0);
-          current_motor_r = 0;
+          cm.expected_motor_r = 0;
+          cm.set_mot_r(cm.expected_motor_r);
         }
       }else{
         vibrations[i]--;
         if(i == 0){
-          cm.set_mot_c(80);
-          current_motor_c = 80;
+          cm.expected_motor_c = 100;
+          cm.set_mot_c(cm.expected_motor_c);
         }else if(i == 2){
-          cm.set_mot_l(80);
-          current_motor_l = 80;
+          cm.expected_motor_l = 100;
+          cm.set_mot_l(cm.expected_motor_l);
         }else if(i == 3){
-          cm.set_mot_r(80);
-          current_motor_r = 80;
+          cm.expected_motor_r = 100;
+          cm.set_mot_r(cm.expected_motor_r);
         }
       }
     }
