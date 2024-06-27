@@ -445,7 +445,7 @@ void uart_com::check_feedback()
     resync_l++;
     String logmsg = "expected motor_l (" + String(current_motor_l) + " != " + String(expected_motor_l) + ") [count=" + String(resync_l) + "]";
     ch_.loginfo(logmsg.c_str());
-    set_mot_l(expected_motor_r);
+    set_mot_l(expected_motor_l);
   }else{
   resync_l = 0;
   }
