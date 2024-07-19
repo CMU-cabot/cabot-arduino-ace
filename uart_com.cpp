@@ -330,6 +330,9 @@ bool uart_com::set_mot(int right, int center, int left)
     buf += String(center) + ",";
     buf += String(left);
     UART.println(buf);
+    expected_motor_r = right;
+    expected_motor_c = center;
+    expected_motor_l = left;
     return true;
   } else {
     return false;
