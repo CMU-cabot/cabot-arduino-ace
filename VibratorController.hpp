@@ -35,8 +35,8 @@ class VibratorController: public SensorReader {
   uint16_t vibrations[4];
 public:
   VibratorController(cabot::Handle & ch, uart_com & cm);
-  void init();
-  void update();
+  void init() override;
+  void update() override;
 };
 
 #endif  // VIBRATORCONTROLLER_HPP_

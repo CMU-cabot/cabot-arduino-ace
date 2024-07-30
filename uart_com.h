@@ -59,6 +59,12 @@ public:
   int motor_r;
   int motor_c;
   int motor_l;
+  int expected_motor_r;
+  int expected_motor_c;
+  int expected_motor_l;
+  int resync_r;
+  int resync_c;
+  int resync_l;
   int switch_up;
   int switch_down;
   int switch_left;
@@ -80,6 +86,7 @@ public:
   bool set_thresh(int thresh);
   bool set_sensi(int sensi);
   void publish();
+  void check_feedback();
 };
 
 #endif  // UART_COM_H_

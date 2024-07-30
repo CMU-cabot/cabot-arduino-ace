@@ -22,6 +22,8 @@
 #include "uart_com.h"  // NOLINT
 #include "Arduino.h"
 #include "stdlib.h"  // NOLINT
+#include "ctime"
+#include "cstdlib"
 
 #define UART Serial2
 
@@ -158,7 +160,6 @@ bool uart_com::parse_dat()
   this->switch_left = DecStringToDec(words[9]);
   this->switch_right = DecStringToDec(words[10]);
   this->switch_center = DecStringToDec(words[11]);
-
   return true;
 }
 
@@ -307,6 +308,7 @@ void uart_com::update()
     char c = UART.read();
     this->StringCmdParse(c);
   }
+  check_feedback();
 }
 
 void uart_com::start()
@@ -326,6 +328,9 @@ bool uart_com::set_mot(int right, int center, int left)
     buf += String(center) + ",";
     buf += String(left);
     UART.println(buf);
+    expected_motor_r = right;
+    expected_motor_c = center;
+    expected_motor_l = left;
     return true;
   } else {
     return false;
@@ -339,6 +344,7 @@ bool uart_com::set_mot_r(int val)
     String buf = "R,";
     buf += String(val);
     UART.println(buf);
+    expected_motor_r = val;
     return true;
   } else {
     return false;
@@ -352,6 +358,7 @@ bool uart_com::set_mot_c(int val)
     String buf = "C,";
     buf += String(val);
     UART.println(buf);
+    expected_motor_c = val;
     return true;
   } else {
     return false;
@@ -365,6 +372,7 @@ bool uart_com::set_mot_l(int val)
     String buf = "L,";
     buf += String(val);
     UART.println(buf);
+    expected_motor_l = val;
     return true;
   } else {
     return false;
@@ -415,3 +423,32 @@ bool uart_com::is_alive()
 void uart_com::publish()
 {
 }
+
+void uart_com::check_feedback()
+{
+  if(this->motor_r != expected_motor_r){
+    resync_r++;
+    String logmsg = "expected motor_r (" + String(this->motor_r) + " != " + String(expected_motor_r) + ") [count=" + String(resync_r) + "]";
+    ch_.loginfo(logmsg.c_str());
+    set_mot_r(expected_motor_r);
+  }else{
+  resync_r = 0;
+  }
+  if(this->motor_c != expected_motor_c){
+    resync_c++;
+    String logmsg = "expected motor_c (" + String(this->motor_c) + " != " + String(expected_motor_c) + ") [count=" + String(resync_c) + "]";
+    ch_.loginfo(logmsg.c_str());
+    set_mot_c(expected_motor_c);
+  }else{
+  resync_c = 0;
+  }
+  if(this->motor_l != expected_motor_l){
+    resync_l++;
+    String logmsg = "expected motor_l (" + String(this->motor_l) + " != " + String(expected_motor_l) + ") [count=" + String(resync_l) + "]";
+    ch_.loginfo(logmsg.c_str());
+    set_mot_l(expected_motor_l);
+  }else{
+  resync_l = 0;
+  }
+}
+

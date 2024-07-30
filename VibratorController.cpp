@@ -62,10 +62,10 @@ void VibratorController::init()
 
 void VibratorController::update()
 {
-for(int i = 0; i < 4; i++){
-  if(vibrations[i] > 0){
-    if(vibrations[i] == 1){
-      vibrations[i] = 0;
+  for(int i = 0; i < 4; i++){
+    if(vibrations[i] > 0){
+      if(vibrations[i] == 1){
+        vibrations[i] = 0;
         if(i == 0){
           cm.set_mot_c(0);
         }else if(i == 2){

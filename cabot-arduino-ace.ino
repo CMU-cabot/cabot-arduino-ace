@@ -44,6 +44,7 @@
 #include "VibratorController.hpp"
 
 cabot::Handle ch;
+uart_com uart(ch);
 Timer < 10 > timer;
 
 // configurations
