@@ -52,9 +52,7 @@ int16_t DecStringToDec(char * str)
 }
 
 uart_com::uart_com(cabot::Handle & ch)
-: SensorReader(ch) {
-  srand(time(NULL)); // random seed initialize
-}
+: SensorReader(ch) {}
 
 void uart_com::begin(int baud_rate)
 {
