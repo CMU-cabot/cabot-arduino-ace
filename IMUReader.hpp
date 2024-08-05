@@ -39,6 +39,7 @@ public:
   void init(uint8_t * offsets);
   void update();
   void update_calibration();
+  uint32_t last_log_time_;
 };
 
 #endif  // IMUREADER_HPP_

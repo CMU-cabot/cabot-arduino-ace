@@ -88,9 +88,13 @@ void IMUReader::update()
   data[11] = xyz.z();
 
   // publish
-  if (!ch_.is_synchronized()) {return;}
-  ch_.loginfo("published");
-  ch_.publish(0x13, data, 12);
+  if (ch_.is_synchronized()) {
+    if (timestamp.sec - last_log_time_ >= 1 ) {
+      ch_.loginfo("published");
+      last_log_time_ = timestamp.sec;
+    }
+    ch_.publish(0x13, data, 12);
+  }
 }
 
 void IMUReader::update_calibration()
