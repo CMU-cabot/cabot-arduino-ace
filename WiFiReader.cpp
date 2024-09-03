@@ -95,9 +95,6 @@ void WiFiReader::handleScan()
     // TODO(where writer): not sure why, but when the serial is disconnected
     // sometimes it can be a strange state that ch.connected() == true and WiFi Scan does not work
     // restart the hardware if the WiFi scan returns no result for 10 consequtive cycles
-    if (channel == 0) {
-      checkZeroScan(10);
-    }
     if (millis() <= scanningStart) {
       // during scan interval
       checkQueue();
