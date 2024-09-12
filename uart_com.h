@@ -49,9 +49,11 @@ private:
   bool parse_dat_short();
   bool parse_dat_shortest();
   bool parse_error();
+  bool parse_log();
   void StringCmdParse(char c);
 
 public:
+  char log[MAX_LEN] = {0};
   bool touch;
   int capacitance;
   int cap_thresh;

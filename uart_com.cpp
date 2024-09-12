@@ -215,6 +215,15 @@ bool uart_com::parse_error()
   return true;
 }
 
+bool uart_com::parse_log()
+{
+  int n = snprintf(log, MAX_LEN, "g");
+  for(int i = 1; i < words_len; i++) {
+    n += snprintf(log+n, MAX_LEN-n, ",%s", words[i]);
+  }
+  return true;
+}
+
 void uart_com::StringCmdParse(char c)
 {
   CMD_PARSE_FLAG = true;
@@ -287,6 +296,8 @@ void uart_com::StringCmdParse(char c)
       this->parse_sensi();
     } else if (strcmp(words[0], "E") == 0) {
       this->parse_error();
+    } else if (strcmp(words[0], "g") == 0) {
+      this->parse_log();
     } else if (strcmp(words[0], "") == 0) {
     } else {
       // other_func();nop just handle error if any.

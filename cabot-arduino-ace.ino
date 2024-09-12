@@ -243,6 +243,10 @@ void loop()
 {
   timer.tick < void > ();
   urt_cm.update();
+  if (strlen(urt_cm.log) > 0) { // output log if available
+    ch.loginfo(urt_cm.log);
+    memset(urt_cm.log, 0, sizeof(urt_cm.log));
+  }
   ch.spinOnce();
 }
 
