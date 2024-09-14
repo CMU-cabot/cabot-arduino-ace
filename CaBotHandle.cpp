@@ -167,8 +167,8 @@ bool Handle::getParam(const char * name, int * out, size_t num, int timeout_ms)
       }
     }
   }
-  if (read_count == 0) {
-    // cannot find parameter
+  if (read_count == 0 || read_count != sizeof(int) * num) {
+    // cannot find parameter or got wrong parameter (due to com issue)
     return false;
   }
   for (size_t i = 0; i < num; i++) {
