@@ -129,9 +129,18 @@ void setup()
       TIMEOUT_DEFAULT))
   {
     offsets = (uint8_t *)malloc(sizeof(uint8_t) * 22);
+    char default_values[128];
+    int n = 0;
+    n = snprintf(default_values+n, sizeof(default_values), "Using [");
     for (int i = 0; i < 22; i++) {
       offsets[i] = calibration_params[i] & 0xFF;
+      n += snprintf(default_values+n, sizeof(default_values)-n, "%d", offsets[i]);
+      if (i < 21) {
+        n += snprintf(default_values+n, sizeof(default_values)-n, ",");
+      }
     }
+    n += snprintf(default_values+n, sizeof(default_values)-n, "] for calibration_params");
+    ch.loginfo(default_values);
   } else {
     ch.logwarn("clibration_params is needed to use IMU (BNO055) correctly.");
     ch.logwarn("You can run calibration by setting _run_imu_calibration:=1");
