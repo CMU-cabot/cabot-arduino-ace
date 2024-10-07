@@ -76,7 +76,7 @@ public:
   int cal_act;
   int i2c_err;
   int uart_err;
-  int send_count=0;
+  bool should_log;
   int error_count;
   explicit uart_com(cabot::Handle & ch);
   void init();

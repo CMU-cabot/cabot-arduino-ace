@@ -218,6 +218,7 @@ bool uart_com::parse_CAP12xx_logging()
   this->i2c_err = DecStringToDec(words[4]);
   this->uart_err = DecStringToDec(words[5]);
 
+  should_log = true;
   return true;
 
 }
@@ -478,10 +479,9 @@ void uart_com::check_feedback()
 
 void uart_com::check_CAP12xx_logging()
 {
-  String CAP12xx_logmsg ="CAP12xx = " + String(this->general) + "," + String(this->noise) +"," + String(this->cal_act) + "," + String(this->i2c_err) + "," + String(this->uart_err);
-  if(send_count >= 1000){
+  if (should_log) {
+    String CAP12xx_logmsg ="CAP12xx," + String(this->general) + "," + String(this->noise) +"," + String(this->cal_act) + "," + String(this->i2c_err) + "," + String(this->uart_err);
     ch_.loginfo(CAP12xx_logmsg.c_str());
-    send_count = 0;
+    should_log = false;
   }
-  send_count++;
 }
