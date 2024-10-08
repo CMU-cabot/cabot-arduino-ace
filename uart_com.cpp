@@ -324,6 +324,13 @@ void uart_com::StringCmdParse(char c)
 
 void uart_com::init()
 {
+  general = 0;
+  noise = 0;
+  cal_act = 0;
+  i2c_err = 0;
+  uart_err = 0;
+  should_log = false;
+  error_count = 0;
 }
 
 void uart_com::update()

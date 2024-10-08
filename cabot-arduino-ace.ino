@@ -192,6 +192,7 @@ void setup()
 
   // initialize
   ch.loginfo("starting uart com");
+  urt_cm.init();
   urt_cm.start();
   ch.loginfo("setting up BMP280");
   bmpReader.init();
