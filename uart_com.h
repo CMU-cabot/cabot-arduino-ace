@@ -49,6 +49,7 @@ private:
   bool parse_dat_short();
   bool parse_dat_shortest();
   bool parse_error();
+  bool parse_CAP12xx_logging();
   void StringCmdParse(char c);
 
 public:
@@ -70,6 +71,12 @@ public:
   int switch_left;
   int switch_right;
   int switch_center;
+  int general;
+  int noise;
+  int cal_act;
+  int i2c_err;
+  int uart_err;
+  bool should_log;
   int error_count;
   explicit uart_com(cabot::Handle & ch);
   void init();
@@ -87,6 +94,7 @@ public:
   bool set_sensi(int sensi);
   void publish();
   void check_feedback();
+  void check_CAP12xx_logging();
 };
 
 #endif  // UART_COM_H_
