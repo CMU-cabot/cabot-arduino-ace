@@ -217,6 +217,26 @@ bool uart_com::parse_dat_shortest()
   return true;
 }
 
+bool uart_com::parse_CAP12xx_logging()
+{
+  if (words_len != 6) {return false;}
+  if (!IsDecString(words[1])) {return false;}
+  if (!IsDecString(words[2])) {return false;}
+  if (!IsDecString(words[3])) {return false;}
+  if (!IsDecString(words[4])) {return false;}
+  if (!IsDecString(words[5])) {return false;}
+
+  this->general = DecStringToDec(words[1]);
+  this->noise = DecStringToDec(words[2]);
+  this->cal_act = DecStringToDec(words[3]);
+  this->i2c_err = DecStringToDec(words[4]);
+  this->uart_err = DecStringToDec(words[5]);
+
+  should_log = true;
+  return true;
+
+}
+
 bool uart_com::parse_error()
 {
   if (words_len != 2) {return false;}
@@ -283,6 +303,10 @@ void uart_com::StringCmdParse(char c)
       if (this->parse_dat_shortest()) {
         _last_update_millis = millis();
       }
+    } else if (strcmp(words[0], "g") == 0) {
+      if (this->parse_CAP12xx_logging()) {
+        _last_update_millis = millis();
+      }
     } else if (strcmp(words[0], "start") == 0) {
       this->_started = true;
     } else if (strcmp(words[0], "stop") == 0) {
@@ -316,6 +340,13 @@ void uart_com::StringCmdParse(char c)
 
 void uart_com::init()
 {
+  general = 0;
+  noise = 0;
+  cal_act = 0;
+  i2c_err = 0;
+  uart_err = 0;
+  should_log = false;
+  error_count = 0;
 }
 
 void uart_com::update()
@@ -325,6 +356,7 @@ void uart_com::update()
     this->StringCmdParse(c);
   }
   check_feedback();
+  check_CAP12xx_logging();
 }
 
 void uart_com::start()
@@ -474,5 +506,15 @@ void uart_com::check_feedback()
     set_mot_l(expected_motor_l);
   }else{
   resync_l = 0;
+  }
+
+}
+
+void uart_com::check_CAP12xx_logging()
+{
+  if (should_log) {
+    String CAP12xx_logmsg ="CAP12xx," + String(this->general) + "," + String(this->noise) +"," + String(this->cal_act) + "," + String(this->i2c_err) + "," + String(this->uart_err);
+    ch_.loginfo(CAP12xx_logmsg.c_str());
+    should_log = false;
   }
 }
