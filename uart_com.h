@@ -36,6 +36,7 @@ private:
   const char delim[2] = ",";
   bool CMD_PARSE_FLAG = false;
   bool StartFlg = false;
+  int NEG_DELTA_CNT = 3;
 
   uint32_t _last_update_millis = 0;
   bool _started = false;
@@ -45,6 +46,7 @@ private:
   bool parse_mot_l();
   bool parse_thresh();
   bool parse_sensi();
+  bool parse_ndc();
   bool parse_dat();
   bool parse_dat_short();
   bool parse_dat_shortest();
@@ -57,6 +59,7 @@ public:
   int capacitance;
   int cap_thresh;
   int sensi = 2;
+  int ndc = 1;
   int motor_r;
   int motor_c;
   int motor_l;
@@ -92,6 +95,7 @@ public:
   bool set_mot_l(int val);
   bool set_thresh(int thresh);
   bool set_sensi(int sensi);
+  bool set_ndc(int ndc);
   void publish();
   void check_feedback();
   void check_CAP12xx_logging();

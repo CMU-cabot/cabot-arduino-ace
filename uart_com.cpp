@@ -134,6 +134,20 @@ bool uart_com::parse_sensi()
   }
 }
 
+bool uart_com::parse_ndc()
+{
+  if (2 == words_len &&
+    IsDecString(words[1]))
+  {
+    this->ndc = DecStringToDec(words[1]);
+    String logndcmsg = "expected ndc (" + String(this->ndc) +")";
+    ch_.loginfo(logndcmsg.c_str());
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool uart_com::parse_dat()
 {
   if (words_len != 12) {return false;}
@@ -309,6 +323,8 @@ void uart_com::StringCmdParse(char c)
       this->parse_thresh();
     } else if (strcmp(words[0], "SENSI") == 0) {
       this->parse_sensi();
+    } else if (strcmp(words[0], "NDC") == 0) {
+      this->parse_ndc();
     } else if (strcmp(words[0], "E") == 0) {
       this->parse_error();
     } else if (strcmp(words[0], "") == 0) {
@@ -346,6 +362,7 @@ void uart_com::update()
 void uart_com::start()
 {
   UART.println("start");
+  set_ndc(NEG_DELTA_CNT);
 }
 void uart_com::stop()
 {
@@ -441,6 +458,14 @@ bool uart_com::set_sensi(int sensi)
   return true;
 }
 
+bool uart_com::set_ndc(int ndc)
+{
+  String buf = "NDC,";
+  buf += String(ndc);
+  UART.println(buf);
+  return true;
+}
+
 bool uart_com::is_started()
 {
   return this->_started;
@@ -482,6 +507,7 @@ void uart_com::check_feedback()
   }else{
   resync_l = 0;
   }
+
 }
 
 void uart_com::check_CAP12xx_logging()
