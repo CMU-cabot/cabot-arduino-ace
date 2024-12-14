@@ -94,6 +94,10 @@ void TouchReader::check_touch_raw(int16_t touch_raw)
         diag_status_ = 2; //error
         diag_message_ = "touch_raw is constant at 0";
       }
+  } else if(touch_raw < -20) {
+      diag_status_ = 1; //warning
+      count_ = 0;
+      diag_message_ = "touch_raw is unstable";
   } else {
       diag_status_ = 0;
       count_ = 0;
