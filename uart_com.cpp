@@ -466,6 +466,16 @@ bool uart_com::set_ndc(int ndc)
   return true;
 }
 
+bool uart_com::act_cal(int cs)
+{
+  String buf = "CASR,";
+  buf += String(cs);
+  UART.println(buf);
+  String logmsg = "act calibration";
+  ch_.loginfo(logmsg.c_str());
+  return true;
+}
+
 bool uart_com::is_started()
 {
   return this->_started;

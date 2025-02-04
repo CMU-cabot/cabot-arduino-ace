@@ -96,6 +96,7 @@ public:
   bool set_thresh(int thresh);
   bool set_sensi(int sensi);
   bool set_ndc(int ndc);
+  bool act_cal(int cs);
   void publish();
   void check_feedback();
   void check_CAP12xx_logging();

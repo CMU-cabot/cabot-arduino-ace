@@ -93,6 +93,9 @@ void TouchReader::check_touch_raw(int16_t touch_raw)
       if (count_ > 100) {
         diag_status_ = 2; //error
         diag_message_ = "touch_raw is constant at 0";
+        // if (cm.cal_act == 0) {
+        //   cm.act_cal(1);
+        // }
       }
   } else {
       diag_status_ = 0;
