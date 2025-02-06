@@ -187,11 +187,18 @@ bool uart_com::parse_dat_short()
 
 bool uart_com::parse_dat_shortest()
 {
-  if (words_len != 3) {return false;}
+  if (words_len != 4) {return false;}
   if (!IsDecString(words[1])) {return false;}
   if (!IsDecString(words[2])) {return false;}
+  if (!IsDecString(words[3])) {return false;}
 
   int code = DecStringToDec(words[1]);
+  int checksum = DecStringToDec(words[3]);
+  if ((code + checksum) != 0xFF) {
+    String msg = "data is corrupted";
+    ch_.loginfo(msg.c_str());
+    return false;
+  }
   this->touch = (code >> 5) % 2;
   this->capacitance = DecStringToDec(words[2]);
   this->switch_up = (code >> 4) % 2;
