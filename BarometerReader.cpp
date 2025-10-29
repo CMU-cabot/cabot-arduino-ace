@@ -28,7 +28,7 @@ BarometerReader::BarometerReader(cabot::Handle & ch)
 void BarometerReader::init()
 {
   Wire.begin(21, 22);
-  if (!bme_.begin(0x76, &Wire)) {
+  if (!bme_.begin(0x77, &Wire)) {
     ch_.loginfo("Ooops, no BME280 detected ... Check your wiring or I2C ADDR!");
     ch_.publish(0x09, (int8_t) 0x00);
     return;
