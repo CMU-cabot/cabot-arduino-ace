@@ -27,6 +27,12 @@ TouchReader::TouchReader(cabot::Handle & ch, uart_com & cm)
 
 void TouchReader::init()
 {
+  if (!cap_.begin(0x5A)) {
+    ch_.loginfo("Ooops, no MPR121 detected ... Check your wiring or I2C ADDR!");
+    return;
+  }
+  set_mode(128);
+
   initialized_ = true;
   is_continuous_ = false;
   diag_status_ = 0;
@@ -38,6 +44,13 @@ void TouchReader::init(
   uint8_t touch_baseline, uint8_t touch_threshold,
   uint8_t release_threshold)
 {
+
+  if (!cap_.begin(0x5A, &Wire, touch_threshold, release_threshold)) {
+    ch_.loginfo("Ooops, no MPR121 detected ... Check your wiring or I2C ADDR!");
+    return;
+  }
+  set_mode(touch_baseline);
+
   ch_.loginfo("Touch initialized");
   initialized_ = true;
   is_continuous_ = false;
@@ -48,6 +61,13 @@ void TouchReader::init(
 
 void TouchReader::set_mode(uint8_t touch_baseline)
 {
+    // stop mode
+  cap_.writeRegister(MPR121_ECR, 0b00000000);
+  // set baseline to 128 ( do not remove bit shift)
+  cap_.writeRegister(MPR121_BASELINE_0, touch_baseline >> 2);
+  // use only pin 0
+  cap_.writeRegister(MPR121_ECR, 0b01000001);
+
   ch_.loginfo("Touch ready");
 }
 
@@ -56,9 +76,9 @@ void TouchReader::update()
   if (!initialized_) {
     return;
   }
-  int touched = cm.touch ? 1 : 0;
+  int touched = cap_.touched();
 
-  int16_t touch_raw = cm.capacitance;
+  int16_t touch_raw = (int16_t)cap_.filteredData(0);
 
   check_touch_raw(touch_raw);
 
